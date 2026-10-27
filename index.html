@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindIt - Lost and Found Recovery Network</title>
+    <meta name="description" content="A centralized and verified community portal for reporting and recovering lost belongings.">
+    <!-- Google Fonts for World-Class Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        (function() {
+            var saved = localStorage.getItem('findit_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <div id="homePageMarker"></div>
+
+    <!-- Site Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">F</div>
+                <span class="logo-text">FindIt</span>
+            </a>
+
+            <!-- Mobile menu button -->
+            <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav-menu" id="navMenu">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="browse.html" class="nav-link">Search Catalog</a></li>
+                    <li><a href="#how-it-works" class="nav-link">Process</a></li>
+                    <li><a href="#safety" class="nav-link">Guidelines</a></li>
+                    <li>
+                        <a href="report.html" class="btn btn-primary btn-sm">Report Item</a>
+                    </li>
+                    <li><a href="login.html" class="nav-link">Sign In</a></li>
+                    <li><a href="register.html" class="btn btn-secondary btn-sm">Register</a></li>
+                    <li class="nav-utility-item">
+                        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme" title="Toggle theme">
+                            <span class="theme-icon-dark">&#9790;</span>
+                            <span class="theme-icon-light">&#9728;</span>
+                        </button>
+                    </li>
+                    <li class="nav-utility-item">
+                        <button type="button" class="scan-replay-btn" id="replayScanBtn" title="Replay 5s Magnifying Glass Scan Animation">
+                            <span class="scan-btn-label">Scan Effect</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Global Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-badge">Centralized Recovery Network</div>
+            <h1 class="hero-title">Report and recover <span>lost belongings.</span></h1>
+            <p class="hero-desc">
+                An organized community portal connecting finders with verified owners across campus and municipal facilities.
+            </p>
+
+            <!-- Search Bar Form -->
+            <form id="heroSearchForm" class="search-box-wrapper" action="browse.html" method="GET">
+                <input type="text" id="heroSearchInput" name="q" class="search-input" placeholder="Search by item name, description, or location..." aria-label="Search items">
+                
+                <select id="heroCategorySelect" name="category" class="search-category-select" aria-label="Select category">
+                    <option value="">All Categories</option>
+                    <option value="electronics">Electronics &amp; Gadgets</option>
+                    <option value="wallets">Wallets &amp; Purses</option>
+                    <option value="keys">Keys &amp; Keychains</option>
+                    <option value="documents">Cards &amp; Documents</option>
+                    <option value="clothing">Clothing &amp; Eyewear</option>
+                    <option value="pets">Pets &amp; Animals</option>
+                    <option value="books">Books &amp; Notebooks</option>
+                    <option value="jewelry">Jewelry &amp; Watches</option>
+                    <option value="other">Other Belongings</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary">
+                    Search Catalog
+                </button>
+            </form>
+
+            <!-- Quick Action Buttons -->
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                <a href="report.html?type=lost" class="btn btn-danger">
+                    Report Lost Item
+                </a>
+                <a href="report.html?type=found" class="btn btn-success">
+                    Report Found Item
+                </a>
+                <a href="browse.html" class="btn btn-secondary">
+                    View Complete Catalog
+                </a>
+            </div>
+
+            <!-- Live Statistics Ribbon -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number" id="statTotal">3</span>
+                    <span class="stat-label">Total Reports</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statLost" style="color: var(--lost-dot);">2</span>
+                    <span class="stat-label">Active Lost</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statFound" style="color: var(--found-dot);">1</span>
+                    <span class="stat-label">Active Found</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statResolved" style="color: var(--primary);">1</span>
+                    <span class="stat-label">Resolved</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="main-wrapper">
+        <!-- Category Quick Filters -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+            <h2 style="font-size: 1.15rem; font-weight: 700;">Filter by Category</h2>
+            <a href="browse.html" style="color: var(--primary); font-weight: 600; font-size: 0.85rem;">All Categories &rarr;</a>
+        </div>
+
+        <div class="category-pills">
+            <button type="button" class="category-pill active" data-category="all">All Categories</button>
+            <button type="button" class="category-pill" data-category="electronics">Electronics &amp; Gadgets</button>
+            <button type="button" class="category-pill" data-category="wallets">Wallets &amp; Purses</button>
+            <button type="button" class="category-pill" data-category="keys">Keys &amp; Keychains</button>
+            <button type="button" class="category-pill" data-category="documents">Cards &amp; Documents</button>
+            <button type="button" class="category-pill" data-category="clothing">Clothing &amp; Eyewear</button>
+            <button type="button" class="category-pill" data-category="pets">Pets &amp; Animals</button>
+            <button type="button" class="category-pill" data-category="books">Books &amp; Notebooks</button>
+            <button type="button" class="category-pill" data-category="jewelry">Jewelry &amp; Watches</button>
+            <button type="button" class="category-pill" data-category="other">Other Belongings</button>
+        </div>
+
+        <!-- Section Title & Filter Tabs -->
+        <div class="filter-bar">
+            <div class="type-tabs">
+                <button type="button" class="tab-btn active" data-type="all">All Items</button>
+                <button type="button" class="tab-btn" data-type="lost">Lost</button>
+                <button type="button" class="tab-btn" data-type="found">Found</button>
+                <button type="button" class="tab-btn" data-type="claimed">Resolved</button>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="quickSearchInput" class="form-control" style="width: 220px; padding: 0.4rem 0.75rem; font-size: 0.82rem;" placeholder="Filter current list...">
+                <a href="browse.html" class="btn btn-secondary btn-sm">Full Catalog</a>
+            </div>
+        </div>
+
+        <!-- Items Grid Container -->
+        <div class="items-grid" id="itemsGrid">
+            <!-- Cards populated dynamically via JavaScript and API -->
+        </div>
+
+        <!-- Process Section -->
+        <section class="section-block" id="how-it-works">
+            <div class="section-header">
+                <h2 class="section-title">Standard Recovery Process</h2>
+                <p class="section-subtitle">A structured workflow to register, identify, and securely return items.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <span class="step-number">01</span>
+                    <h3 class="step-title">File an Accurate Report</h3>
+                    <p class="step-desc">
+                        Document the item with specific descriptions, date, exact location, and distinguishing features.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <span class="step-number">02</span>
+                    <h3 class="step-title">Database Verification</h3>
+                    <p class="step-desc">
+                        Search listings or allow automated matching algorithms to index newly discovered reports.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <span class="step-number">03</span>
+                    <h3 class="step-title">Claim &amp; Safe Handover</h3>
+                    <p class="step-desc">
+                        Submit verification proofs, schedule exchange at a designated security desk, and resolve the case.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety Guidelines Section -->
+        <section class="section-block" id="safety">
+            <div class="section-header">
+                <h2 class="section-title">Safety &amp; Verification Protocol</h2>
+                <p class="section-subtitle">Recommended safety procedures for property retrieval exchanges.</p>
+            </div>
+
+            <div class="safety-grid">
+                <div class="safety-card">
+                    <h4>Public Meeting Locations</h4>
+                    <p>Always coordinate physical item exchanges in supervised, monitored locations such as facility security desks or administrative offices.</p>
+                </div>
+
+                <div class="safety-card">
+                    <h4>Proof of Ownership</h4>
+                    <p>Request verifying documentation such as serial numbers, purchase invoices, or unique non-public identifying details.</p>
+                </div>
+
+                <div class="safety-card">
+                    <h4>Financial Caution</h4>
+                    <p>Never send monetary advances or courier dispatch charges prior to physical handover and ownership verification.</p>
+                </div>
+
+                <div class="safety-card">
+                    <h4>Data Protection</h4>
+                    <p>Do not disclose private financial data, access codes, or government identification numbers during inquiry correspondence.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom CTA -->
+        <div style="text-align: center; margin-top: 3.5rem; padding: 2.25rem; background: #ffffff; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-xs);">
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem;">Need assistance locating an item?</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Use advanced parameter filtering or file a verified report into the community registry.</p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                <a href="browse.html" class="btn btn-secondary btn-sm">Advanced Search</a>
+                <a href="report.html" class="btn btn-primary btn-sm">Submit New Report</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Item Details Modal -->
+    <div class="modal-overlay" id="itemDetailModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="detailModalTitle">Item Details</h3>
+                <button type="button" class="modal-close-btn" data-close-modal title="Close">&times;</button>
+            </div>
+            <div class="modal-body" id="detailModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Quick Claim Modal Dialog -->
+    <div class="modal-overlay" id="claimModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Submit Claim Inquiry</h3>
+                <button type="button" class="modal-close-btn" data-close-modal title="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Inquiry regarding: <strong id="claimModalItemTitle" style="color: var(--text-main);">this record</strong>. Provide your contact details and ownership verification.
+                </p>
+
+                <form id="claimForm">
+                    <input type="hidden" id="claimItemId" name="item_id" value="">
+
+                    <div class="form-group">
+                        <label class="form-label" for="claimantName">Full Legal Name <span class="required">*</span></label>
+                        <input type="text" id="claimantName" name="claimant_name" class="form-control" placeholder="Full Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="claimantEmail">Contact Email Address <span class="required">*</span></label>
+                        <input type="email" id="claimantEmail" name="claimant_email" class="form-control" placeholder="name@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="claimantPhone">Phone Number</label>
+                        <input type="tel" id="claimantPhone" name="claimant_phone" class="form-control" placeholder="+1 (555) 000-0000">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="claimMessage">Proof of Ownership / Details <span class="required">*</span></label>
+                        <textarea id="claimMessage" name="claim_message" class="form-control" rows="3" placeholder="Provide distinct identifiers, serial numbers, invoice details, or specific identifying marks..." required></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 0.65rem; justify-content: flex-end; margin-top: 1.25rem;">
+                        <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Submit Claim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <span class="logo-icon">F</span>
+                    <span>FindIt Recovery Network</span>
+                </div>
+                <p class="footer-tagline">
+                    An open community platform dedicated to helping individuals recover lost property, log discovered items, and facilitate secure returns.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="browse.html">Catalog Search</a></li>
+                    <li><a href="report.html">Report Property</a></li>
+                    <li><a href="#how-it-works">Standard Process</a></li>
+                    <li><a href="#safety">Security Guidelines</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="browse.html?category=electronics">Electronics</a></li>
+                    <li><a href="browse.html?category=wallets">Wallets &amp; Bags</a></li>
+                    <li><a href="browse.html?category=keys">Keys &amp; Fobs</a></li>
+                    <li><a href="browse.html?category=documents">Documents &amp; IDs</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Security Notice</h4>
+                <p class="footer-text">
+                    Arrange all physical handovers in verified public locations or campus security desks. Confirm proof of ownership before relinquishing property.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-container">
+                <p>&copy; 2026 FindIt Portal. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="browse.html?type=lost">Lost Records</a>
+                    <a href="browse.html?type=found">Found Records</a>
+                    <a href="browse.html?type=claimed">Resolved Cases</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Seed Fallback Items -->
+    <script>
+        window.initialItems = [
+            {
+                id: 7,
+                type: "lost",
+                title: "SP Shine 125 Motorcycle Keys",
+                category: "keys",
+                description: "Silver key chain with 2 keys misplaced near parking facility.",
+                location: "West Parking Lot, Section C",
+                item_date: "2026-10-24",
+                image_url: null,
+                status: "active",
+                contact_name: "Apoorv Pandey",
+                contact_email: "apoorvpandey678@gmail.com"
+            },
+            {
+                id: 2,
+                type: "lost",
+                title: "Brown Leather Bi-fold Wallet",
+                category: "wallets",
+                description: "Vintage leather wallet with driver license and transit pass.",
+                location: "Central Dining Hall, Table 12",
+                item_date: "2026-10-11",
+                image_url: null,
+                status: "active",
+                contact_name: "John Doe",
+                contact_email: "john@example.com"
+            },
+            {
+                id: 6,
+                type: "found",
+                title: "Calculus & Linear Algebra Textbook (9th Ed)",
+                category: "books",
+                description: "Hardcover university mathematics textbook left in row 3.",
+                location: "Science Lecture Hall B",
+                item_date: "2026-10-09",
+                image_url: null,
+                status: "claimed",
+                contact_name: "Department Helpdesk",
+                contact_email: "helpdesk@example.com"
+            }
+        ];
+    </script>
+
+    <!-- Global App Scripts -->
+    <script src="js/validation.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

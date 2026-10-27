@@ -1,0 +1,278 @@
+<?php
+/**
+ * FindIt - User Dashboard
+ * Complete management portal: view my posts, edit, delete, toggle status, and review claims.
+ * Enforces compulsory login to safeguard member items.
+ */
+require_once __DIR__ . '/db.php';
+
+// Enforce Compulsory Login
+require_login();
+
+$pdo = getDbConnection();
+$user = current_user();
+$userId = $user['id'];
+
+// Fetch user's reported items
+$itemsStmt = $pdo->prepare("SELECT * FROM items WHERE user_id = :user_id ORDER BY created_at DESC");
+$itemsStmt->execute([':user_id' => $userId]);
+$myItems = $itemsStmt->fetchAll();
+
+// Fetch claims submitted on user's items
+$claimsStmt = $pdo->prepare("
+    SELECT c.*, i.title as item_title, i.type as item_type, i.id as item_id
+    FROM claims c
+    JOIN items i ON c.item_id = i.id
+    WHERE i.user_id = :user_id
+    ORDER BY c.created_at DESC
+");
+$claimsStmt->execute([':user_id' => $userId]);
+$incomingClaims = $claimsStmt->fetchAll();
+
+// Calculate user statistics
+$totalPosted = count($myItems);
+$activeItems = 0;
+$resolvedItems = 0;
+foreach ($myItems as $item) {
+    if ($item['status'] === 'active') $activeItems++;
+    else $resolvedItems++;
+}
+$pendingClaims = 0;
+foreach ($incomingClaims as $c) {
+    if ($c['status'] === 'pending') $pendingClaims++;
+}
+
+render_header('My Dashboard', 'dashboard');
+?>
+
+<main class="main-wrapper">
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <a href="index.php">Home</a>
+        <span class="divider">/</span>
+        <span>My Dashboard</span>
+    </div>
+
+    <!-- User Welcome Banner -->
+    <div style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #ffffff; padding: 2rem 2.5rem; border-radius: var(--radius-lg); margin-bottom: 2rem; box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+            <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; margin-bottom: 0.25rem;">Member Dashboard</div>
+            <h1 style="font-size: 2rem; font-weight: 800;"><?= htmlspecialchars($user['name']) ?></h1>
+            <p style="opacity: 0.9; font-size: 0.95rem; margin-top: 0.25rem;"><?= htmlspecialchars($user['email']) ?> • Account Role: <span style="text-transform: capitalize; background: rgba(255,255,255,0.2); padding: 0.2rem 0.5rem; border-radius: 4px;"><?= htmlspecialchars($user['role']) ?></span></p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="report.php" class="btn btn-primary" style="background: #ffffff; color: #312e81; font-weight: 700;">
+                + Report New Item
+            </a>
+            <?php if (is_admin()): ?>
+                <a href="admin.php" class="btn btn-secondary" style="background: rgba(255,255,255,0.15); color: #ffffff; border-color: transparent;">
+                    <?= get_svg_icon('shield', 'svg-icon', 15) ?> Admin Panel
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="stats-container" style="margin-top: 0; margin-bottom: 2.5rem;">
+        <div class="stat-card">
+            <span class="stat-number"><?= $totalPosted ?></span>
+            <span class="stat-label">My Reports</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" style="color: var(--lost-color);"><?= $activeItems ?></span>
+            <span class="stat-label">Active / Searching</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" style="color: var(--primary);"><?= $resolvedItems ?></span>
+            <span class="stat-label">Reunited / Resolved</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" style="color: var(--warning);"><?= $pendingClaims ?></span>
+            <span class="stat-label">Pending Inquiries</span>
+        </div>
+    </div>
+
+    <!-- Section 1: My Reported Items -->
+    <div style="margin-bottom: 3.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h2 style="font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;"><?= get_svg_icon('clipboard', 'svg-icon', 20) ?> My Reported Items (<?= $totalPosted ?>)</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Manage listings you reported, update their status, or edit description details.</p>
+            </div>
+            <a href="report.php" class="btn btn-primary btn-sm">+ Post New Item</a>
+        </div>
+
+        <?php if (empty($myItems)): ?>
+            <div class="empty-state">
+                <div class="empty-state-icon"><?= get_svg_icon('edit', 'svg-icon', 48) ?></div>
+                <h3>You Haven't Reported Any Items Yet</h3>
+                <p>Have you lost something or discovered an item? Submit a report now to connect with the community.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.25rem;">
+                    <a href="report.php?type=lost" class="btn btn-danger btn-sm">Report Lost Item</a>
+                    <a href="report.php?type=found" class="btn btn-success btn-sm">Report Found Item</a>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Item Details</th>
+                            <th>Type</th>
+                            <th>Category</th>
+                            <th>Date &amp; Place</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($myItems as $item): ?>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.85rem;">
+                                        <?php if (!empty($item['image_path']) && file_exists(UPLOAD_DIR . $item['image_path'])): ?>
+                                            <img src="<?= UPLOAD_WEB_PATH . htmlspecialchars($item['image_path']) ?>" alt="" style="width: 46px; height: 46px; object-fit: cover; border-radius: var(--radius-sm);">
+                                        <?php else: ?>
+                                            <div style="width: 46px; height: 46px; background: var(--bg-body); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                                                <?= get_svg_icon('package', 'svg-icon', 22) ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div>
+                                            <a href="item.php?id=<?= $item['id'] ?>" style="font-weight: 700; color: var(--text-main);">
+                                                <?= htmlspecialchars($item['title']) ?>
+                                            </a>
+                                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                                Reported <?= time_ago($item['created_at']) ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-pill" style="<?= ($item['type'] === 'lost') ? 'background: var(--lost-light); color: var(--lost-color);' : 'background: var(--found-light); color: var(--found-color);' ?>">
+                                        <?= ucfirst($item['type']) ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <small><?= htmlspecialchars(get_category_label($item['category'])) ?></small>
+                                </td>
+                                <td>
+                                    <small><span class="meta-row" style="display: flex; align-items: center; gap: 0.25rem;"><?= get_svg_icon('calendar', 'svg-icon', 12) ?> <?= htmlspecialchars($item['item_date']) ?></span><span class="meta-row" style="display: flex; align-items: center; gap: 0.25rem;"><?= get_svg_icon('map-pin', 'svg-icon', 12) ?> <?= htmlspecialchars($item['location']) ?></span></small>
+                                </td>
+                                <td>
+                                    <span class="status-pill status-<?= ($item['status'] === 'active') ? 'active' : 'returned' ?>">
+                                        <?= ucfirst($item['status']) ?>
+                                    </span>
+                                </td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <div style="display: inline-flex; gap: 0.35rem;">
+                                        <a href="item.php?id=<?= $item['id'] ?>" class="btn btn-secondary btn-sm" title="View details">
+                                            <?= get_svg_icon('eye', 'svg-icon', 13) ?> View
+                                        </a>
+                                        <a href="report.php?id=<?= $item['id'] ?>" class="btn btn-secondary btn-sm" title="Edit details">
+                                            <?= get_svg_icon('edit', 'svg-icon', 13) ?> Edit
+                                        </a>
+
+                                        <?php if ($item['status'] === 'active'): ?>
+                                            <a href="item.php?id=<?= $item['id'] ?>&action=status&status=claimed&csrf=<?= generate_csrf_token() ?>" class="btn btn-secondary btn-sm" style="color: var(--found-color);" title="Mark as resolved" onclick="return confirm('Mark this item as resolved?')">
+                                                <?= get_svg_icon('check', 'svg-icon', 13) ?> Resolve
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="item.php?id=<?= $item['id'] ?>&action=status&status=active&csrf=<?= generate_csrf_token() ?>" class="btn btn-secondary btn-sm" title="Reactivate item" onclick="return confirm('Re-activate this item?')">
+                                                <?= get_svg_icon('refresh', 'svg-icon', 13) ?> Reactivate
+                                            </a>
+                                        <?php endif; ?>
+
+                                        <a href="item.php?id=<?= $item['id'] ?>&action=delete&csrf=<?= generate_csrf_token() ?>" class="btn btn-danger btn-sm" title="Delete record" onclick="return confirm('Permanently remove this report?');">
+                                            <?= get_svg_icon('trash', 'svg-icon', 13) ?>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Section 2: Incoming Claims / Inquiries -->
+    <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <div>
+                <h2 style="font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;"><?= get_svg_icon('inbox', 'svg-icon', 20) ?> Inquiries &amp; Claims Received (<?= count($incomingClaims) ?>)</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Review proof of ownership submitted by others for your posted items.</p>
+            </div>
+        </div>
+
+        <?php if (empty($incomingClaims)): ?>
+            <div class="empty-state" style="padding: 2.5rem 1rem;">
+                <div class="empty-state-icon"><?= get_svg_icon('inbox', 'svg-icon', 48) ?></div>
+                <h3>No Inquiries Received Yet</h3>
+                <p>When someone files a claim or sends a message regarding your items, it will appear here.</p>
+            </div>
+        <?php else: ?>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Related Item</th>
+                            <th>Claimant Contact</th>
+                            <th>Proof Details / Message</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($incomingClaims as $claim): ?>
+                            <tr>
+                                <td>
+                                    <a href="item.php?id=<?= $claim['item_id'] ?>" style="font-weight: 700; color: var(--primary);">
+                                        <?= htmlspecialchars($claim['item_title']) ?>
+                                    </a>
+                                    <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">
+                                        (<?= htmlspecialchars($claim['item_type']) ?>)
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong><?= htmlspecialchars($claim['claimant_name']) ?></strong><br>
+                                    <a href="mailto:<?= htmlspecialchars($claim['claimant_email']) ?>"><small><?= htmlspecialchars($claim['claimant_email']) ?></small></a>
+                                    <?php if (!empty($claim['claimant_phone'])): ?>
+                                        <br><small><?= htmlspecialchars($claim['claimant_phone']) ?></small>
+                                    <?php endif; ?>
+                                </td>
+                                <td style="max-width: 320px;">
+                                    <div style="background: #f8fafc; padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color);">
+                                        <?= nl2br(htmlspecialchars($claim['claim_message'])) ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <small><?= time_ago($claim['created_at']) ?></small>
+                                </td>
+                                <td>
+                                    <span class="status-pill status-<?= ($claim['status'] === 'approved') ? 'returned' : (($claim['status'] === 'rejected') ? 'active' : 'claimed') ?>">
+                                        <?= ucfirst($claim['status']) ?>
+                                    </span>
+                                </td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <?php if ($claim['status'] === 'pending'): ?>
+                                        <a href="item.php?action=claim_status&claim_id=<?= $claim['id'] ?>&claim_status=approved&csrf=<?= generate_csrf_token() ?>" class="btn btn-success btn-sm" onclick="return confirm('Approve this claim? This will resolve the item.')">
+                                            <?= get_svg_icon('check', 'svg-icon', 13) ?> Approve
+                                        </a>
+                                        <a href="item.php?action=claim_status&claim_id=<?= $claim['id'] ?>&claim_status=rejected&csrf=<?= generate_csrf_token() ?>" class="btn btn-secondary btn-sm" onclick="return confirm('Reject this claim?')">
+                                            <?= get_svg_icon('close', 'svg-icon', 13) ?> Reject
+                                        </a>
+                                    <?php else: ?>
+                                        <small style="color: var(--text-muted);">Processed</small>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </div>
+</main>
+
+<?php render_footer(); ?>

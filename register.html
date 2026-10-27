@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Account - FindIt</title>
+    <meta name="description" content="Register an account on FindIt to manage your lost and found listings.">
+    <!-- Google Fonts for World-Class Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        (function() {
+            var saved = localStorage.getItem('findit_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <!-- Site Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">F</div>
+                <span class="logo-text">FindIt</span>
+            </a>
+
+            <!-- Mobile menu button -->
+            <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav-menu" id="navMenu">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="browse.html" class="nav-link">Search Catalog</a></li>
+                    <li><a href="report.html" class="btn btn-primary btn-sm">Report Item</a></li>
+                    <li><a href="login.html" class="nav-link">Sign In</a></li>
+                    <li><a href="register.html" class="btn btn-secondary btn-sm active">Register</a></li>
+                    <li class="nav-utility-item">
+                        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme" title="Toggle theme">
+                            <span class="theme-icon-dark">&#9790;</span>
+                            <span class="theme-icon-light">&#9728;</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="form-container" style="max-width: 480px; margin-top: 3.5rem;">
+            <div class="form-header">
+                <h1>Create an Account</h1>
+                <p>Register with FindIt to maintain your property listings and receive direct claim notifications.</p>
+            </div>
+
+            <form action="register.php" method="POST" class="needs-validation" novalidate>
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="First and Last Name" required minlength="2">
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="name@domain.com" required>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number (Optional)</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="+1 (555) 000-0000">
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label" for="password">Password <span class="required">*</span></label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Minimum 6 characters" required minlength="6">
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label class="form-label" for="confirm_password">Confirm Password <span class="required">*</span></label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Repeat your password" required minlength="6">
+                </div>
+
+                <!-- Submit Button -->
+                <div style="margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-muted);">
+                Already registered? <a href="login.html" style="color: var(--primary); font-weight: 600;">Sign in here</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <div class="footer-container">
+                <p>&copy; 2026 FindIt Portal. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="index.html">Home</a>
+                    <a href="browse.html">Catalog</a>
+                    <a href="report.html">Report</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/validation.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
