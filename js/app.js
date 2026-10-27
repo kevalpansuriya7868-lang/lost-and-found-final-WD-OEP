@@ -736,11 +736,6 @@ function getOrCreateScanOverlay() {
                 </div>
                 <div class="scan-frame-ring"></div>
                 <div class="scan-handle"></div>
-                <div class="scan-hud-tag" id="scanHudTag">
-                    <span class="hud-pulse-dot"></span>
-                    <span class="hud-text">SCANNING PORTAL</span>
-                    <span class="hud-timer" id="scanTimerCount">5.0s</span>
-                </div>
             </div>
             <div class="scan-pulse-ring" id="scanPulseRing"></div>
             <button type="button" class="scan-skip-btn" id="scanSkipBtn" title="Skip animation">Skip Scan &times;</button>
@@ -792,16 +787,10 @@ function startMagnifyingGlassScan(overlay) {
     overlay.style.display = 'block';
     overlay.classList.remove('scan-complete');
 
-    const hudTag = overlay.querySelector('#scanHudTag');
-    const timerSpan = overlay.querySelector('#scanTimerCount');
     const pulseRing = overlay.querySelector('#scanPulseRing');
     const skipBtn = overlay.querySelector('#scanSkipBtn');
 
     if (pulseRing) pulseRing.classList.remove('burst');
-    if (hudTag) {
-        const textSpan = hudTag.querySelector('.hud-text');
-        if (textSpan) textSpan.textContent = 'SCANNING PORTAL';
-    }
 
     let isFinished = false;
     const duration = 5000; // Exact 5 seconds
@@ -845,12 +834,6 @@ function startMagnifyingGlassScan(overlay) {
     function finishScan() {
         if (isFinished) return;
         isFinished = true;
-
-        if (timerSpan) timerSpan.textContent = '0.0s';
-        if (hudTag) {
-            const textSpan = hudTag.querySelector('.hud-text');
-            if (textSpan) textSpan.textContent = 'PORTAL REVEALED';
-        }
 
         // Trigger radiant pulse burst
         if (pulseRing) pulseRing.classList.add('burst');
@@ -899,9 +882,6 @@ function startMagnifyingGlassScan(overlay) {
             backdrop.style.maskImage = maskGradient;
             backdrop.style.webkitMaskImage = maskGradient;
         }
-
-        const remainingSeconds = Math.max(0, (duration - elapsed) / 1000).toFixed(1);
-        if (timerSpan) timerSpan.textContent = `${remainingSeconds}s`;
 
         if (progress < 1) {
             requestAnimationFrame(frame);

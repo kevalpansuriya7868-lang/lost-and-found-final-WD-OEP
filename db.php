@@ -580,11 +580,6 @@ function render_header($pageTitle = '', $activeTab = '') {
             </div>
             <div class="scan-frame-ring"></div>
             <div class="scan-handle"></div>
-            <div class="scan-hud-tag" id="scanHudTag">
-                <span class="hud-pulse-dot"></span>
-                <span class="hud-text">SCANNING PORTAL</span>
-                <span class="hud-timer" id="scanTimerCount">5.0s</span>
-            </div>
         </div>
         <div class="scan-pulse-ring" id="scanPulseRing"></div>
         <button type="button" class="scan-skip-btn" id="scanSkipBtn" title="Skip animation">Skip Scan &times;</button>
