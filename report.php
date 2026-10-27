@@ -270,7 +270,7 @@ render_header($pageTitle);
 
             <!-- Status Dropdown (Edit Mode Only) -->
             <?php if ($isEdit): ?>
-                <div class="form-group" style="background: #f8fafc; padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <div class="form-group" style="background: var(--bg-elevated); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
                     <label class="form-label" for="status">
                         Listing Lifecycle Status <span class="required">*</span>
                     </label>
@@ -341,7 +341,7 @@ render_header($pageTitle);
                     <label class="form-label">Photo Upload (Optional, max 5MB)</label>
                     
                     <?php if (!empty($current_image) && file_exists(UPLOAD_DIR . $current_image)): ?>
-                        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.85rem; background: #f8fafc; padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.85rem; background: var(--bg-elevated); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
                             <img src="<?= UPLOAD_WEB_PATH . htmlspecialchars($current_image) ?>" alt="Current Image" style="width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius-sm);">
                             <div>
                                 <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Current Photo Attached</span>

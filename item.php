@@ -349,7 +349,7 @@ render_header($pageTitle);
                 <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">
                     Full Description
                 </h3>
-                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem; font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem; font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
                     <?= nl2br(htmlspecialchars($item['description'])) ?>
                 </div>
             </div>
@@ -357,21 +357,21 @@ render_header($pageTitle);
             <!-- Ownership Claims Review (Reporter / Admin View) -->
             <?php if ($canManage): ?>
                 <div style="margin-top: 2rem;">
-                    <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-main);">
                         Ownership Claims Received (<?= count($claims) ?>)
                     </h3>
 
                     <?php if (empty($claims)): ?>
-                        <div style="background: #f8fafc; border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                        <div style="background: var(--bg-elevated); border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
                             No claims inquiries have been submitted for this item yet.
                         </div>
                     <?php else: ?>
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                             <?php foreach ($claims as $claim): ?>
-                                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; box-shadow: var(--shadow-sm);">
+                                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; box-shadow: var(--shadow-sm);">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
                                         <div>
-                                            <strong><?= htmlspecialchars($claim['claimant_name']) ?></strong>
+                                            <strong style="color: var(--text-main);"><?= htmlspecialchars($claim['claimant_name']) ?></strong>
                                             <span style="color: var(--text-muted); font-size: 0.85rem;"> &bull; <?= time_ago($claim['created_at']) ?></span>
                                         </div>
                                         <span class="status-pill status-<?= htmlspecialchars($claim['status']) ?>">
@@ -386,7 +386,7 @@ render_header($pageTitle);
                                         <?php endif; ?>
                                     </div>
 
-                                    <div style="background: #f8fafc; padding: 0.85rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem;">
+                                    <div style="background: var(--bg-elevated); padding: 0.85rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; color: var(--text-main);">
                                         <strong>Proof Provided:</strong> <?= nl2br(htmlspecialchars($claim['claim_message'])) ?>
                                     </div>
 

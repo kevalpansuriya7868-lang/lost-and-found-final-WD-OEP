@@ -72,7 +72,7 @@ render_header('Search & Browse Catalog', 'browse');
     </div>
 
     <!-- Search & Filter Controls Card -->
-    <div style="background: #ffffff; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); padding: 1.75rem; margin-bottom: 2rem;">
+    <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); padding: 1.75rem; margin-bottom: 2rem;">
         <h1 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.65rem;">
             <?= get_svg_icon('search', 'svg-icon', 24) ?> Search &amp; Filter Database
         </h1>

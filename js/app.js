@@ -416,7 +416,7 @@ function openItemDetailsModal(itemId) {
                 <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text-main);">${escapeHtml(item.description)}</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; background: #f8fafc; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; border: 1px solid var(--border-color);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; background: var(--bg-elevated); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; border: 1px solid var(--border-color);">
                 <div>
                     <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.03em;">Location</span>
                     <p style="font-size: 0.875rem; font-weight: 500; color: var(--text-main);">${escapeHtml(item.location)}</p>

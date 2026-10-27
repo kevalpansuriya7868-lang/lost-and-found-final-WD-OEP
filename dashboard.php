@@ -242,7 +242,7 @@ render_header('My Dashboard', 'dashboard');
                                     <?php endif; ?>
                                 </td>
                                 <td style="max-width: 320px;">
-                                    <div style="background: #f8fafc; padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color);">
+                                    <div style="background: var(--bg-elevated); color: var(--text-main); padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--border-color);">
                                         <?= nl2br(htmlspecialchars($claim['claim_message'])) ?>
                                     </div>
                                 </td>

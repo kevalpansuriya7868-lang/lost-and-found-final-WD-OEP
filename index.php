@@ -185,8 +185,8 @@ render_header('Home - Community Lost & Found');
     </div>
 
     <!-- Bottom Call-to-Action -->
-    <div style="text-align: center; margin-top: 3rem; padding: 2.5rem; background: #ffffff; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-        <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem;">Can't find what you are looking for?</h3>
+    <div style="text-align: center; margin-top: 3rem; padding: 2.5rem; background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main);">Can't find what you are looking for?</h3>
         <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Use our multi-filter search catalog or report a missing belonging directly.</p>
         <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
             <a href="browse.php" class="btn btn-secondary">Open Advanced Search</a>
