@@ -732,7 +732,6 @@ function getOrCreateScanOverlay() {
             <div class="scan-blur-backdrop"></div>
             <div class="scan-lens-unit" id="scanLensUnit">
                 <div class="scan-lens-glass">
-                    <div class="scan-reticle"></div>
                     <div class="scan-light-flare"></div>
                 </div>
                 <div class="scan-frame-ring"></div>
@@ -887,8 +886,19 @@ function startMagnifyingGlassScan(overlay) {
         const progress = Math.min(elapsed / duration, 1);
 
         const point = getInterpolatedPoint(progress);
-        overlay.style.setProperty('--glass-x', `${point.x.toFixed(1)}px`);
-        overlay.style.setProperty('--glass-y', `${point.y.toFixed(1)}px`);
+        const px = point.x.toFixed(1);
+        const py = point.y.toFixed(1);
+
+        overlay.style.setProperty('--glass-x', `${px}px`);
+        overlay.style.setProperty('--glass-y', `${py}px`);
+
+        // Explicitly update the backdrop cutout mask so the lens interior is 100% visible
+        const backdrop = overlay.querySelector('.scan-blur-backdrop');
+        if (backdrop) {
+            const maskGradient = `radial-gradient(circle 108px at ${px}px ${py}px, transparent 0%, transparent 100px, black 108px)`;
+            backdrop.style.maskImage = maskGradient;
+            backdrop.style.webkitMaskImage = maskGradient;
+        }
 
         const remainingSeconds = Math.max(0, (duration - elapsed) / 1000).toFixed(1);
         if (timerSpan) timerSpan.textContent = `${remainingSeconds}s`;

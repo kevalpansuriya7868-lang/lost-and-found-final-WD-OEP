@@ -576,7 +576,6 @@ function render_header($pageTitle = '', $activeTab = '') {
         <div class="scan-blur-backdrop"></div>
         <div class="scan-lens-unit" id="scanLensUnit">
             <div class="scan-lens-glass">
-                <div class="scan-reticle"></div>
                 <div class="scan-light-flare"></div>
             </div>
             <div class="scan-frame-ring"></div>
@@ -646,17 +645,11 @@ function render_header($pageTitle = '', $activeTab = '') {
                         </li>
                     <?php endif; ?>
 
-                    <!-- Theme Toggle & Animation Replay Trigger -->
+                    <!-- Theme Toggle -->
                     <li class="nav-utility-item">
                         <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle color theme" title="Toggle theme">
                             <span class="theme-icon-dark"><?= get_svg_icon('moon', 'svg-icon', 16) ?></span>
                             <span class="theme-icon-light"><?= get_svg_icon('sun', 'svg-icon', 16) ?></span>
-                        </button>
-                    </li>
-                    <li class="nav-utility-item">
-                        <button type="button" class="scan-replay-btn" id="replayScanBtn" title="Replay 5s Magnifying Glass Scan Animation" aria-label="Replay Scan Animation">
-                            <?= get_svg_icon('search', 'svg-icon', 15) ?>
-                            <span class="scan-btn-label">Scan Effect</span>
                         </button>
                     </li>
                 </ul>
