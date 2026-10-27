@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 login_user($user);
                 $_SESSION['login_animation'] = true;
                 set_flash('success', 'Welcome back, ' . htmlspecialchars($user['name']) . '!');
-                header("Location: " . $redirect);
+                header("Location: index.php");
                 exit;
             } else {
                 $errors['login'] = 'Invalid email address or password. Please verify your credentials.';
@@ -126,24 +126,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             login_user($newUser);
             $_SESSION['login_animation'] = true;
             set_flash('success', 'Your account has been created! Welcome to FindIt, ' . htmlspecialchars($newUser['name']) . '.');
-            header("Location: " . $redirect);
+            header("Location: index.php");
             exit;
         }
     }
 }
 
-$pageTitle = ($mode === 'register') ? 'Create Account' : 'Sign In Required';
+$pageTitle = ($mode === 'register') ? 'Create Account' : 'Sign In';
 render_header($pageTitle);
 ?>
 
 <main class="main-wrapper">
     <div class="form-container" style="max-width: 480px; margin-top: 2.5rem; margin-bottom: 3.5rem;">
         
-        <!-- Compulsory Login Notice -->
+        <!-- Member Authentication Notice -->
         <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
             <span style="display: flex; align-items: center; color: var(--primary);"><?= get_svg_icon('lock', 'svg-icon', 20) ?></span>
             <div style="font-size: 0.85rem; color: var(--text-main); line-height: 1.4;">
-                <strong>Authentication Required:</strong> Please sign in to access the portal. All editing and reporting operations require an active login session.
+                <strong>Member Authentication:</strong> Sign in to report lost or found items, manage your listings, and review ownership claims.
             </div>
         </div>
 

@@ -6,9 +6,6 @@
  */
 require_once __DIR__ . '/db.php';
 
-// Enforce Compulsory Login
-require_login();
-
 $pdo = getDbConnection();
 
 // Get filter parameters
