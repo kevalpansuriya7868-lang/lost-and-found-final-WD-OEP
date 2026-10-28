@@ -567,6 +567,17 @@ function render_header($pageTitle = '', $activeTab = '') {
         (function() {
             var saved = localStorage.getItem('findit_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', saved);
+
+            // On website refresh/reload, restart from 0 (login page)
+            try {
+                var nav = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation') : [];
+                var isReload = (nav.length > 0 && nav[0].type === 'reload') || (window.performance && performance.navigation && performance.navigation.type === 1);
+                var path = window.location.pathname;
+                var isLoginPage = path.indexOf('login.php') !== -1;
+                if (isReload && !isLoginPage) {
+                    window.location.replace('login.php?action=logout');
+                }
+            } catch(e) {}
         })();
     </script>
 </head>
@@ -576,6 +587,60 @@ function render_header($pageTitle = '', $activeTab = '') {
         <div class="scan-blur-backdrop"></div>
         <div class="scan-lens-unit" id="scanLensUnit">
             <div class="scan-lens-glass">
+                <div class="scan-hologram-stage" id="scanHologramStage">
+                    <div class="scan-holo-item holo-wallet active" id="holoItemWallet">
+                        <svg class="holo-svg" viewBox="0 0 80 80" width="48" height="48">
+                            <defs>
+                                <linearGradient id="holoWGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fb7185" />
+                                    <stop offset="100%" stop-color="#f43f5e" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="10" y="22" width="60" height="40" rx="8" fill="url(#holoWGrad)" opacity="0.9" />
+                            <rect x="14" y="26" width="52" height="12" rx="4" fill="#ffffff" opacity="0.25" />
+                            <rect x="48" y="36" width="22" height="16" rx="4" fill="#0f172a" opacity="0.6" />
+                            <circle cx="56" cy="44" r="3" fill="#fbbf24" />
+                            <line x1="10" y1="38" x2="48" y2="38" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5" />
+                        </svg>
+                        <div class="holo-item-badge badge-lost">LOST: WALLET</div>
+                    </div>
+                    <div class="scan-holo-item holo-mobile" id="holoItemMobile">
+                        <svg class="holo-svg" viewBox="0 0 80 80" width="48" height="48">
+                            <defs>
+                                <linearGradient id="holoMGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#38bdf8" />
+                                    <stop offset="100%" stop-color="#0284c7" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="24" y="12" width="32" height="56" rx="7" fill="url(#holoMGrad)" opacity="0.9" />
+                            <rect x="27" y="16" width="26" height="42" rx="4" fill="#0f172a" opacity="0.8" />
+                            <circle cx="40" cy="37" r="7" stroke="#38bdf8" stroke-width="2" fill="none" opacity="0.9" />
+                            <line x1="33" y1="37" x2="47" y2="37" stroke="#38bdf8" stroke-width="1.5" />
+                            <line x1="40" y1="30" x2="40" y2="44" stroke="#38bdf8" stroke-width="1.5" />
+                            <circle cx="40" cy="14" r="1.5" fill="#ffffff" opacity="0.7" />
+                            <circle cx="40" cy="62" r="2.5" fill="#ffffff" opacity="0.6" />
+                        </svg>
+                        <div class="holo-item-badge badge-found">FOUND: MOBILE</div>
+                    </div>
+                    <div class="scan-holo-item holo-handover" id="holoItemHandover">
+                        <svg class="holo-svg" viewBox="0 0 80 80" width="48" height="48">
+                            <defs>
+                                <linearGradient id="holoHGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#34d399" />
+                                    <stop offset="100%" stop-color="#059669" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="28" cy="24" r="7" fill="url(#holoHGrad)" />
+                            <path d="M18 48 C18 36, 38 36, 38 48" fill="url(#holoHGrad)" opacity="0.7" />
+                            <circle cx="52" cy="24" r="7" fill="url(#holoHGrad)" />
+                            <path d="M42 48 C42 36, 62 36, 62 48" fill="url(#holoHGrad)" opacity="0.7" />
+                            <rect x="33" y="38" width="14" height="14" rx="3" fill="#fbbf24" />
+                            <line x1="40" y1="38" x2="40" y2="52" stroke="#d97706" stroke-width="1.5" />
+                            <line x1="33" y1="45" x2="47" y2="45" stroke="#d97706" stroke-width="1.5" />
+                        </svg>
+                        <div class="holo-item-badge badge-claimed">REUNITED: RETURNED</div>
+                    </div>
+                </div>
                 <div class="scan-light-flare"></div>
             </div>
             <div class="scan-frame-ring"></div>
