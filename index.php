@@ -62,153 +62,142 @@ render_header('Home - Community Lost & Found');
             </a>
         </div>
 
-        <!-- Starting Page Visual Showcase: Wallet, Mobile & Person Returning Item Handover -->
-        <div class="visual-story-grid">
-            <div class="visual-story-card card-lost-accent">
-                <div class="story-img-container">
-                    <svg class="story-img-svg" viewBox="0 0 340 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wallet with Lost Something banner">
-                        <defs>
-                            <linearGradient id="walletBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#1e293b" />
-                                <stop offset="100%" stop-color="#0f172a" />
-                            </linearGradient>
-                            <linearGradient id="walletLeather" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#9a3412" />
-                                <stop offset="50%" stop-color="#7c2d12" />
-                                <stop offset="100%" stop-color="#431407" />
-                            </linearGradient>
-                            <linearGradient id="cardGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#38bdf8" />
-                                <stop offset="100%" stop-color="#0284c7" />
-                            </linearGradient>
-                            <linearGradient id="cardGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#fbbf24" />
-                                <stop offset="100%" stop-color="#d97706" />
-                            </linearGradient>
-                            <linearGradient id="cashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#34d399" />
-                                <stop offset="100%" stop-color="#059669" />
-                            </linearGradient>
-                        </defs>
-                        <rect width="340" height="190" rx="16" fill="url(#walletBgGrad)" />
-                        <circle cx="170" cy="85" r="70" fill="#f43f5e" opacity="0.12" filter="blur(20px)" />
-                        <rect x="110" y="28" width="120" height="42" rx="4" fill="url(#cashGrad)" transform="rotate(-6 170 49)" opacity="0.9" />
-                        <circle cx="170" cy="46" r="10" stroke="#a7f3d0" stroke-width="2" fill="none" transform="rotate(-6 170 49)" />
-                        <rect x="95" y="42" width="100" height="55" rx="6" fill="url(#cardGrad2)" transform="rotate(-12 145 69)" opacity="0.95" />
-                        <rect x="105" y="58" width="20" height="15" rx="2" fill="#78350f" transform="rotate(-12 145 69)" />
-                        <rect x="150" y="38" width="105" height="55" rx="6" fill="url(#cardGrad1)" transform="rotate(8 202 65)" opacity="0.95" />
-                        <circle cx="175" cy="58" r="8" fill="#ffffff" opacity="0.5" transform="rotate(8 202 65)" />
-                        <rect x="70" y="60" width="200" height="100" rx="14" fill="url(#walletLeather)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
-                        <rect x="76" y="66" width="188" height="88" rx="10" fill="none" stroke="#fed7aa" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.45" />
-                        <path d="M 220 85 L 265 85 A 12 12 0 0 1 265 115 L 220 115 Z" fill="#431407" stroke="#fed7aa" stroke-width="1" stroke-dasharray="4 2" />
-                        <circle cx="250" cy="100" r="7" fill="#fbbf24" stroke="#d97706" stroke-width="1.5" />
-                        <g transform="translate(170, 150)">
-                            <rect x="-85" y="-14" width="170" height="28" rx="14" fill="#f43f5e" />
-                            <text x="0" y="5" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="12" font-weight="800" letter-spacing="1" text-anchor="middle">LOST SOMETHING?</text>
+        <!-- Ambient Laid-Down Items Collage (Dropped Belongings Theme Art) -->
+        <div class="scattered-items-stage" aria-hidden="true">
+            <!-- 1. Dropped Leather Wallet (Tilted -14deg) -->
+            <div class="dropped-item item-wallet" title="Lost Wallet">
+                <svg class="dropped-svg" viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="dropWalletLeather" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#b45309" />
+                            <stop offset="40%" stop-color="#854d0e" />
+                            <stop offset="100%" stop-color="#451a03" />
+                        </linearGradient>
+                        <linearGradient id="dropCashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#10b981" />
+                            <stop offset="100%" stop-color="#047857" />
+                        </linearGradient>
+                        <filter id="walletShadow" x="-20%" y="-20%" width="150%" height="160%">
+                            <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#000000" flood-opacity="0.55" />
+                        </filter>
+                    </defs>
+                    <g filter="url(#walletShadow)">
+                        <!-- Cash slipping out -->
+                        <rect x="70" y="22" width="115" height="42" rx="4" fill="url(#dropCashGrad)" transform="rotate(-6 130 43)" />
+                        <circle cx="128" cy="40" r="8" stroke="#a7f3d0" stroke-width="1.5" fill="none" transform="rotate(-6 130 43)" />
+                        <!-- Cards slipping out -->
+                        <rect x="55" y="36" width="90" height="50" rx="5" fill="#0284c7" transform="rotate(-12 100 61)" />
+                        <rect x="110" y="32" width="95" height="50" rx="5" fill="#f59e0b" transform="rotate(8 157 57)" />
+                        <!-- Wallet main body -->
+                        <rect x="35" y="48" width="195" height="105" rx="14" fill="url(#dropWalletLeather)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                        <!-- Stitching lines -->
+                        <rect x="41" y="54" width="183" height="93" rx="10" fill="none" stroke="#fde68a" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.6" />
+                        <!-- Inner fold flap -->
+                        <path d="M 180 75 L 225 75 A 12 12 0 0 1 225 105 L 180 105 Z" fill="#451a03" stroke="#fde68a" stroke-width="1" stroke-dasharray="4 2" />
+                        <circle cx="212" cy="90" r="6" fill="#fbbf24" stroke="#d97706" stroke-width="1.5" />
+                        <!-- Tape label on wallet: "lost something" -->
+                        <g transform="translate(115, 115) rotate(-3)">
+                            <rect x="-65" y="-13" width="130" height="26" rx="4" fill="#fffbeb" stroke="#d97706" stroke-width="1" />
+                            <rect x="-60" y="-13" width="12" height="6" fill="rgba(245, 158, 11, 0.4)" />
+                            <rect x="48" y="-13" width="12" height="6" fill="rgba(245, 158, 11, 0.4)" />
+                            <text x="0" y="5" fill="#92400e" font-family="'Outfit', sans-serif" font-size="12" font-weight="800" letter-spacing="0.5" text-anchor="middle">lost something</text>
                         </g>
-                    </svg>
-                </div>
-                <div class="story-card-body">
-                    <h3 class="story-card-title">Lost Something?</h3>
-                    <p class="story-card-desc">Lost your wallet, IDs, keys or essentials? Post details right away to notify searchers.</p>
-                    <a href="report.php?type=lost" class="story-card-link text-lost">Report Missing Item &rarr;</a>
-                </div>
+                    </g>
+                </svg>
             </div>
 
-            <div class="visual-story-card card-found-accent">
-                <div class="story-img-container">
-                    <svg class="story-img-svg" viewBox="0 0 340 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mobile Phone with Find It banner">
-                        <defs>
-                            <linearGradient id="phoneBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#1e293b" />
-                                <stop offset="100%" stop-color="#0f172a" />
-                            </linearGradient>
-                            <linearGradient id="phoneBody" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#334155" />
-                                <stop offset="100%" stop-color="#0f172a" />
-                            </linearGradient>
-                            <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#0284c7" />
-                                <stop offset="50%" stop-color="#0369a1" />
-                                <stop offset="100%" stop-color="#0c4a6e" />
-                            </linearGradient>
-                        </defs>
-                        <rect width="340" height="190" rx="16" fill="url(#phoneBgGrad)" />
-                        <circle cx="170" cy="85" r="70" fill="#06b6d4" opacity="0.15" filter="blur(20px)" />
-                        <circle cx="170" cy="75" r="60" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.35" />
-                        <circle cx="170" cy="75" r="85" stroke="#06b6d4" stroke-width="1" opacity="0.2" />
-                        <rect x="122" y="15" width="96" height="145" rx="18" fill="url(#phoneBody)" stroke="rgba(255,255,255,0.2)" stroke-width="2" />
-                        <rect x="128" y="22" width="84" height="131" rx="13" fill="url(#screenGrad)" />
-                        <rect x="155" y="27" width="30" height="6" rx="3" fill="#0f172a" />
-                        <circle cx="170" cy="78" r="28" stroke="#38bdf8" stroke-width="1.5" fill="none" opacity="0.4" />
-                        <circle cx="170" cy="78" r="16" stroke="#38bdf8" stroke-width="2" fill="none" opacity="0.8" />
-                        <path d="M 170 66 C 165 66 161 70 161 75 C 161 82 170 89 170 89 C 170 89 179 82 179 75 C 179 70 175 66 170 66 Z" fill="#38bdf8" />
-                        <circle cx="170" cy="74" r="3" fill="#0f172a" />
-                        <rect x="136" y="105" width="68" height="20" rx="10" fill="rgba(15,23,42,0.85)" stroke="#38bdf8" stroke-width="1" />
-                        <text x="170" y="119" fill="#38bdf8" font-family="'Outfit', sans-serif" font-size="9" font-weight="700" text-anchor="middle">MATCH FOUND</text>
-                        <g transform="translate(170, 150)">
-                            <rect x="-65" y="-14" width="130" height="28" rx="14" fill="#0284c7" />
-                            <text x="0" y="5" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="12" font-weight="800" letter-spacing="1" text-anchor="middle">FIND IT!</text>
+            <!-- 2. Dropped Mobile Phone (Tilted 16deg) -->
+            <div class="dropped-item item-phone" title="Found Mobile">
+                <svg class="dropped-svg" viewBox="0 0 240 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="dropPhoneBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#334155" />
+                            <stop offset="100%" stop-color="#0f172a" />
+                        </linearGradient>
+                        <linearGradient id="dropPhoneScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0369a1" />
+                            <stop offset="50%" stop-color="#0284c7" />
+                            <stop offset="100%" stop-color="#0c4a6e" />
+                        </linearGradient>
+                        <filter id="phoneShadow" x="-20%" y="-20%" width="150%" height="160%">
+                            <feDropShadow dx="0" dy="18" stdDeviation="15" flood-color="#000000" flood-opacity="0.6" />
+                        </filter>
+                    </defs>
+                    <g filter="url(#phoneShadow)">
+                        <!-- Phone casing -->
+                        <rect x="45" y="25" width="140" height="225" rx="24" fill="url(#dropPhoneBody)" stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+                        <!-- Screen glass -->
+                        <rect x="52" y="33" width="126" height="209" rx="18" fill="url(#dropPhoneScreen)" />
+                        <!-- Speaker / camera notch -->
+                        <rect x="95" y="40" width="40" height="7" rx="3.5" fill="#0f172a" />
+                        <!-- Screen radar circles -->
+                        <circle cx="115" cy="115" r="38" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4" />
+                        <circle cx="115" cy="115" r="22" stroke="#38bdf8" stroke-width="1.5" opacity="0.7" />
+                        <!-- Map locator pin on screen -->
+                        <path d="M 115 102 C 109 102 105 106 105 112 C 105 120 115 127 115 127 C 115 127 125 120 125 112 C 125 106 121 102 115 102 Z" fill="#38bdf8" />
+                        <circle cx="115" cy="111" r="3" fill="#0f172a" />
+                        <!-- Notification banner on screen with "find it" -->
+                        <g transform="translate(115, 175)">
+                            <rect x="-52" y="-16" width="104" height="32" rx="16" fill="rgba(15, 23, 42, 0.9)" stroke="#38bdf8" stroke-width="1.5" />
+                            <circle cx="-34" cy="0" r="5" fill="#38bdf8" />
+                            <text x="6" y="5" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="13" font-weight="800" letter-spacing="0.5" text-anchor="middle">find it</text>
                         </g>
-                    </svg>
-                </div>
-                <div class="story-card-body">
-                    <h3 class="story-card-title">Find It!</h3>
-                    <p class="story-card-desc">Browse found smartphones, electronics and items recovered by community members.</p>
-                    <a href="browse.php?type=found" class="story-card-link text-found">Search Found Items &rarr;</a>
-                </div>
+                        <!-- Home indicator bar -->
+                        <rect x="95" y="230" width="40" height="3" rx="1.5" fill="#ffffff" opacity="0.6" />
+                    </g>
+                </svg>
             </div>
 
-            <div class="visual-story-card card-reunited-accent">
-                <div class="story-img-container">
-                    <svg class="story-img-svg" viewBox="0 0 340 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Person returning item to another person">
-                        <defs>
-                            <linearGradient id="reuniteBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#1e293b" />
-                                <stop offset="100%" stop-color="#0f172a" />
-                            </linearGradient>
-                            <linearGradient id="personAGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#38bdf8" />
-                                <stop offset="100%" stop-color="#0284c7" />
-                            </linearGradient>
-                            <linearGradient id="personBGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#a78bfa" />
-                                <stop offset="100%" stop-color="#7c3aed" />
-                            </linearGradient>
-                            <linearGradient id="giftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#34d399" />
-                                <stop offset="100%" stop-color="#059669" />
-                            </linearGradient>
-                        </defs>
-                        <rect width="340" height="190" rx="16" fill="url(#reuniteBgGrad)" />
-                        <circle cx="170" cy="85" r="70" fill="#10b981" opacity="0.14" filter="blur(20px)" />
-                        <path d="M 170 30 L 172 38 L 180 40 L 172 42 L 170 50 L 168 42 L 160 40 L 168 38 Z" fill="#fbbf24" />
-                        <circle cx="145" cy="38" r="2.5" fill="#38bdf8" />
-                        <circle cx="195" cy="38" r="2.5" fill="#a78bfa" />
-                        <circle cx="95" cy="52" r="16" fill="url(#personAGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
-                        <path d="M 83 48 C 83 38 107 38 107 48" fill="#0f172a" opacity="0.6" />
-                        <path d="M 72 108 C 72 82 118 82 118 108 Z" fill="url(#personAGrad)" />
-                        <path d="M 108 86 Q 135 88 152 92" stroke="url(#personAGrad)" stroke-width="8" stroke-linecap="round" />
-                        <circle cx="245" cy="52" r="16" fill="url(#personBGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
-                        <path d="M 233 48 C 233 38 257 38 257 48" fill="#0f172a" opacity="0.6" />
-                        <path d="M 222 108 C 222 82 268 82 268 108 Z" fill="url(#personBGrad)" />
-                        <path d="M 232 86 Q 205 88 188 92" stroke="url(#personBGrad)" stroke-width="8" stroke-linecap="round" />
-                        <rect x="152" y="78" width="36" height="30" rx="5" fill="url(#giftGrad)" stroke="#a7f3d0" stroke-width="1.5" />
-                        <line x1="170" y1="78" x2="170" y2="108" stroke="#ffffff" stroke-width="2.5" />
-                        <line x1="152" y1="93" x2="188" y2="93" stroke="#ffffff" stroke-width="2.5" />
-                        <ellipse cx="166" cy="76" rx="4" ry="2.5" fill="#ffffff" />
-                        <ellipse cx="174" cy="76" rx="4" ry="2.5" fill="#ffffff" />
-                        <g transform="translate(170, 150)">
-                            <rect x="-85" y="-14" width="170" height="28" rx="14" fill="#059669" />
-                            <text x="0" y="5" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="12" font-weight="800" letter-spacing="1" text-anchor="middle">CLAIM &amp; REUNITE</text>
-                        </g>
-                    </svg>
-                </div>
-                <div class="story-card-body">
-                    <h3 class="story-card-title">Claim &amp; Reunite</h3>
-                    <p class="story-card-desc">Hand over found possessions safely to confirmed owners with verified claim proof.</p>
-                    <a href="browse.php?type=claimed" class="story-card-link text-reunited">See Reunited Items &rarr;</a>
-                </div>
+            <!-- 3. Dropped Polaroid of One Person Returning Item to Another Person (Tilted -8deg) -->
+            <div class="dropped-item item-return" title="Reunited Item">
+                <svg class="dropped-svg" viewBox="0 0 280 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="dropReturnGradA" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8" />
+                            <stop offset="100%" stop-color="#0284c7" />
+                        </linearGradient>
+                        <linearGradient id="dropReturnGradB" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#a78bfa" />
+                            <stop offset="100%" stop-color="#7c3aed" />
+                        </linearGradient>
+                        <linearGradient id="dropBoxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#34d399" />
+                            <stop offset="100%" stop-color="#059669" />
+                        </linearGradient>
+                        <filter id="returnShadow" x="-20%" y="-20%" width="150%" height="160%">
+                            <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#000000" flood-opacity="0.55" />
+                        </filter>
+                    </defs>
+                    <g filter="url(#returnShadow)">
+                        <!-- Polaroid Photo Frame / Laid Card -->
+                        <rect x="25" y="15" width="230" height="195" rx="12" fill="#1e293b" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                        <rect x="110" y="8" width="60" height="15" rx="2" fill="rgba(99, 102, 241, 0.45)" transform="rotate(-2 140 15)" />
+                        <!-- Inner photo canvas -->
+                        <rect x="35" y="25" width="210" height="135" rx="8" fill="#0f172a" />
+                        <!-- Overhead gratitude stars -->
+                        <path d="M 140 40 L 142 46 L 148 48 L 142 50 L 140 56 L 138 50 L 132 48 L 138 46 Z" fill="#fbbf24" />
+                        <circle cx="118" cy="46" r="2" fill="#38bdf8" />
+                        <circle cx="162" cy="46" r="2" fill="#a78bfa" />
+                        <!-- Person 1 (Returning/Finder on Left) -->
+                        <circle cx="75" cy="62" r="14" fill="url(#dropReturnGradA)" />
+                        <path d="M 64 58 C 64 50 86 50 86 58" fill="#0f172a" opacity="0.6" />
+                        <path d="M 55 110 C 55 88 95 88 95 110 Z" fill="url(#dropReturnGradA)" />
+                        <!-- Arm extending toward center holding item -->
+                        <path d="M 88 92 Q 112 94 125 97" stroke="url(#dropReturnGradA)" stroke-width="7" stroke-linecap="round" />
+                        <!-- Person 2 (Receiving Owner on Right) -->
+                        <circle cx="205" cy="62" r="14" fill="url(#dropReturnGradB)" />
+                        <path d="M 194 58 C 194 50 216 50 216 58" fill="#0f172a" opacity="0.6" />
+                        <path d="M 185 110 C 185 88 225 88 225 110 Z" fill="url(#dropReturnGradB)" />
+                        <!-- Arm extending to receive -->
+                        <path d="M 192 92 Q 168 94 155 97" stroke="url(#dropReturnGradB)" stroke-width="7" stroke-linecap="round" />
+                        <!-- Item Box in Middle Being Handed Over -->
+                        <rect x="124" y="85" width="32" height="26" rx="4" fill="url(#dropBoxGrad)" stroke="#a7f3d0" stroke-width="1.2" />
+                        <line x1="140" y1="85" x2="140" y2="111" stroke="#ffffff" stroke-width="2" />
+                        <line x1="124" y1="98" x2="156" y2="98" stroke="#ffffff" stroke-width="2" />
+                        <!-- Caption at bottom of photo -->
+                        <text x="140" y="185" fill="#e2e8f0" font-family="'Outfit', sans-serif" font-size="13" font-weight="700" letter-spacing="0.5" text-anchor="middle">returning item to owner</text>
+                    </g>
+                </svg>
             </div>
         </div>
 

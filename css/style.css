@@ -612,124 +612,90 @@ html[data-theme="light"] .theme-icon-light { display: none; }
 }
 
 /* ==========================================================================
-   Starting Page Visual Story Showcase (Wallet, Mobile, Person Returning Item)
+   Ambient Laid-Down Items Collage (Dropped Belongings Theme Visuals)
+   Natural angled placement: dropped leather wallet, phone & return polaroid
    ========================================================================== */
-.visual-story-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: 2.75rem;
-  margin-bottom: 2rem;
-  text-align: left;
-}
-
-.visual-story-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
+.scattered-items-stage {
   display: flex;
-  flex-direction: column;
-  transition: var(--transition);
-  position: relative;
-}
-
-.visual-story-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--border-hover);
-}
-
-.story-img-container {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: #0f172a;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.story-img-svg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.visual-story-card:hover .story-img-svg {
-  transform: scale(1.03);
-}
-
-.story-card-body {
-  padding: 1.25rem 1.35rem 1.35rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.story-card-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--text-main);
-  margin-bottom: 0.4rem;
-  letter-spacing: -0.01em;
-}
-
-.story-card-desc {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: 1.1rem;
-  flex: 1;
-}
-
-.story-card-link {
-  font-size: 0.84rem;
-  font-weight: 700;
-  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  transition: var(--transition);
+  gap: 2.5rem;
+  margin: 3.5rem auto 2.5rem;
+  max-width: 960px;
+  position: relative;
+  perspective: 1200px;
 }
 
-.story-card-link:hover {
-  transform: translateX(3px);
+.dropped-item {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+  cursor: default;
+  user-select: none;
 }
 
-.text-lost {
-  color: var(--lost-color);
+.dropped-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
 
-.text-found {
-  color: #38bdf8;
+/* 1. Dropped Wallet: tilted -14 degrees as if accidentally dropped on surface */
+.item-wallet {
+  width: 275px;
+  max-width: 32%;
+  transform: rotate(-14deg) translateY(6px);
+  z-index: 2;
 }
 
-.text-reunited {
-  color: var(--found-color);
+.item-wallet:hover {
+  transform: rotate(-10deg) translateY(-8px) scale(1.05);
+  z-index: 6;
 }
 
-.card-lost-accent:hover {
-  border-color: rgba(244, 63, 94, 0.45);
-  box-shadow: 0 12px 28px -4px rgba(244, 63, 94, 0.25);
+/* 2. Dropped Mobile Phone: tilted 16 degrees as if laid on table */
+.item-phone {
+  width: 215px;
+  max-width: 27%;
+  transform: rotate(16deg) translateY(-8px);
+  z-index: 3;
 }
 
-.card-found-accent:hover {
-  border-color: rgba(6, 182, 212, 0.45);
-  box-shadow: 0 12px 28px -4px rgba(6, 182, 212, 0.25);
+.item-phone:hover {
+  transform: rotate(12deg) translateY(-14px) scale(1.05);
+  z-index: 6;
 }
 
-.card-reunited-accent:hover {
-  border-color: rgba(16, 185, 129, 0.45);
-  box-shadow: 0 12px 28px -4px rgba(16, 185, 129, 0.25);
+/* 3. Dropped Return Photo: tilted -8 degrees like a laid polaroid/postcard */
+.item-return {
+  width: 265px;
+  max-width: 32%;
+  transform: rotate(-8deg) translateY(10px);
+  z-index: 1;
 }
 
-@media (max-width: 900px) {
-  .visual-story-grid {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+.item-return:hover {
+  transform: rotate(-4deg) translateY(-6px) scale(1.05);
+  z-index: 6;
+}
+
+@media (max-width: 768px) {
+  .scattered-items-stage {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 2rem auto;
+  }
+  .item-wallet {
+    max-width: 46%;
+    width: 220px;
+  }
+  .item-phone {
+    max-width: 44%;
+    width: 180px;
+  }
+  .item-return {
+    max-width: 75%;
+    width: 240px;
   }
 }
 
