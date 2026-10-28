@@ -6,6 +6,9 @@
  */
 require_once __DIR__ . '/db.php';
 
+// Enforce Compulsory Login
+require_login();
+
 $pdo = getDbConnection();
 
 // Fetch live statistics
