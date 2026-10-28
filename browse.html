@@ -15,6 +15,9 @@
         (function() {
             var saved = localStorage.getItem('findit_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', saved);
+            if (window.location.protocol.startsWith('http')) {
+                window.location.replace('browse.php' + window.location.search);
+            }
         })();
     </script>
 </head>

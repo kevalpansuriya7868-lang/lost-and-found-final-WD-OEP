@@ -50,6 +50,13 @@ switch ($action) {
 }
 
 function handleGetItems($pdo) {
+    // Require Login for Browsing & Searching Items
+    if (!is_logged_in()) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'You must log in to browse and search items.']);
+        return;
+    }
+
     $type = trim($_GET['type'] ?? 'all');
     $category = trim($_GET['category'] ?? 'all');
     $query = trim($_GET['query'] ?? $_GET['q'] ?? '');
@@ -110,6 +117,13 @@ function handleGetItems($pdo) {
 }
 
 function handleGetSingleItem($pdo) {
+    // Require Login for Viewing Item Details
+    if (!is_logged_in()) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'You must log in to view item details.']);
+        return;
+    }
+
     $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: (int)($_GET['id'] ?? 0);
     if (!$id) {
         echo json_encode(['success' => false, 'error' => 'Invalid item ID']);

@@ -70,7 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 login_user($user);
                 $_SESSION['login_animation'] = true;
                 set_flash('success', 'Welcome back, ' . htmlspecialchars($user['name']) . '!');
-                header("Location: index.php");
+                $target = !empty($redirect) ? $redirect : 'index.php';
+                header("Location: " . $target);
                 exit;
             } else {
                 $errors['login'] = 'Invalid email address or password. Please verify your credentials.';
@@ -126,7 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             login_user($newUser);
             $_SESSION['login_animation'] = true;
             set_flash('success', 'Your account has been created! Welcome to FindIt, ' . htmlspecialchars($newUser['name']) . '.');
-            header("Location: index.php");
+            $target = !empty($redirect) ? $redirect : 'index.php';
+            header("Location: " . $target);
             exit;
         }
     }
