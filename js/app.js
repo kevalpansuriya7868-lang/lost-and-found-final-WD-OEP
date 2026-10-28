@@ -3,19 +3,6 @@
  * Professional, clean client-side logic without unnecessary emojis
  */
 
-// On website refresh/reload: restart from 0 (login page)
-(function() {
-    try {
-        const navEntries = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation') : [];
-        const isReload = (navEntries.length > 0 && navEntries[0].type === 'reload') || 
-                         (window.performance && performance.navigation && performance.navigation.type === 1);
-        const isLoginPage = window.location.pathname.indexOf('login.php') !== -1;
-        if (isReload && !isLoginPage) {
-            window.location.replace('login.php?action=logout');
-        }
-    } catch (e) {}
-})();
-
 const CATEGORIES = {
     electronics: { label: 'Electronics & Gadgets' },
     wallets:     { label: 'Wallets & Purses' },
@@ -745,42 +732,6 @@ function getOrCreateScanOverlay() {
             <div class="scan-blur-backdrop"></div>
             <div class="scan-lens-unit" id="scanLensUnit">
                 <div class="scan-lens-glass">
-                    <div class="scan-hologram-stage" id="scanHologramStage">
-                        <div class="scan-holo-item holo-wallet active" id="holoItemWallet">
-                            <svg class="holo-svg" viewBox="0 0 80 80" width="48" height="48">
-                                <rect x="10" y="22" width="60" height="40" rx="8" fill="#f43f5e" opacity="0.9" />
-                                <rect x="14" y="26" width="52" height="12" rx="4" fill="#ffffff" opacity="0.25" />
-                                <rect x="48" y="36" width="22" height="16" rx="4" fill="#0f172a" opacity="0.6" />
-                                <circle cx="56" cy="44" r="3" fill="#fbbf24" />
-                                <line x1="10" y1="38" x2="48" y2="38" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5" />
-                            </svg>
-                            <div class="holo-item-badge badge-lost">LOST: WALLET</div>
-                        </div>
-                        <div class="scan-holo-item holo-mobile" id="holoItemMobile">
-                            <svg class="holo-svg" viewBox="0 0 80 80" width="48" height="48">
-                                <rect x="24" y="12" width="32" height="56" rx="7" fill="#0284c7" opacity="0.9" />
-                                <rect x="27" y="16" width="26" height="42" rx="4" fill="#0f172a" opacity="0.8" />
-                                <circle cx="40" cy="37" r="7" stroke="#38bdf8" stroke-width="2" fill="none" opacity="0.9" />
-                                <line x1="33" y1="37" x2="47" y2="37" stroke="#38bdf8" stroke-width="1.5" />
-                                <line x1="40" y1="30" x2="40" y2="44" stroke="#38bdf8" stroke-width="1.5" />
-                                <circle cx="40" cy="14" r="1.5" fill="#ffffff" opacity="0.7" />
-                                <circle cx="40" cy="62" r="2.5" fill="#ffffff" opacity="0.6" />
-                            </svg>
-                            <div class="holo-item-badge badge-found">FOUND: MOBILE</div>
-                        </div>
-                        <div class="scan-holo-item holo-handover" id="holoItemHandover">
-                            <svg class="holo-svg" viewBox="0 0 80 80" width="48" height="48">
-                                <circle cx="28" cy="24" r="7" fill="#059669" />
-                                <path d="M18 48 C18 36, 38 36, 38 48" fill="#059669" opacity="0.7" />
-                                <circle cx="52" cy="24" r="7" fill="#059669" />
-                                <path d="M42 48 C42 36, 62 36, 62 48" fill="#059669" opacity="0.7" />
-                                <rect x="33" y="38" width="14" height="14" rx="3" fill="#fbbf24" />
-                                <line x1="40" y1="38" x2="40" y2="52" stroke="#d97706" stroke-width="1.5" />
-                                <line x1="33" y1="45" x2="47" y2="45" stroke="#d97706" stroke-width="1.5" />
-                            </svg>
-                            <div class="holo-item-badge badge-claimed">REUNITED: RETURNED</div>
-                        </div>
-                    </div>
                     <div class="scan-light-flare"></div>
                 </div>
                 <div class="scan-frame-ring"></div>
@@ -951,29 +902,6 @@ function startMagnifyingGlassScan(overlay) {
 
         const remainingSeconds = Math.max(0, (duration - elapsed) / 1000).toFixed(1);
         if (timerSpan) timerSpan.textContent = `${remainingSeconds}s`;
-
-        // Holographic visual items cycling during scan animation
-        const holoWallet = overlay.querySelector('#holoItemWallet');
-        const holoMobile = overlay.querySelector('#holoItemMobile');
-        const holoHandover = overlay.querySelector('#holoItemHandover');
-        const textSpan = hudTag ? hudTag.querySelector('.hud-text') : null;
-
-        if (elapsed < 1800) {
-            if (holoWallet) holoWallet.classList.add('active');
-            if (holoMobile) holoMobile.classList.remove('active');
-            if (holoHandover) holoHandover.classList.remove('active');
-            if (textSpan) textSpan.textContent = 'SCANNING: WALLET';
-        } else if (elapsed < 3400) {
-            if (holoWallet) holoWallet.classList.remove('active');
-            if (holoMobile) holoMobile.classList.add('active');
-            if (holoHandover) holoHandover.classList.remove('active');
-            if (textSpan) textSpan.textContent = 'SCANNING: MOBILE';
-        } else {
-            if (holoWallet) holoWallet.classList.remove('active');
-            if (holoMobile) holoMobile.classList.remove('active');
-            if (holoHandover) holoHandover.classList.add('active');
-            if (textSpan) textSpan.textContent = 'REUNION VERIFIED';
-        }
 
         if (progress < 1) {
             requestAnimationFrame(frame);

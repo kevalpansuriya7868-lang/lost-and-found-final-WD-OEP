@@ -19,13 +19,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
 $pdo = getDbConnection();
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
-// Enforce Compulsory Login for API endpoints
-if (!is_logged_in()) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Authentication required. Please sign in to access portal catalog.']);
-    exit;
-}
-
 switch ($action) {
     case 'get_items':
         handleGetItems($pdo);
