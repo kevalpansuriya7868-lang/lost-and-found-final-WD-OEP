@@ -67,7 +67,8 @@ CREATE TABLE IF NOT EXISTS `claims` (
 -- --------------------------------------------------------
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `phone`) VALUES
 (1, 'System Administrator', 'admin@findit.local', '$2y$10$eE.l1kO/t.iVq6rXm6e0Z.N2N4aWJm1vN7uB3yL8Z9kX4n2v9V0eO', 'admin', '+1 (555) 000-1111'),
-(2, 'John Doe', 'john@example.com', '$2y$10$wT3wYtN7Oq5E5V2L.0Gj0uO/h1P2Y3Z4A5B6C7D8E9F0G1H2I3J4K', 'user', '+1 (555) 234-5678')
+(2, 'John Doe', 'john@example.com', '$2y$10$wT3wYtN7Oq5E5V2L.0Gj0uO/h1P2Y3Z4A5B6C7D8E9F0G1H2I3J4K', 'user', '+1 (555) 234-5678'),
+(3, 'Apoorv Pandey', 'apoorvpandey678@gmail.com', '$2y$10$V9HXyIH5ZotwrXLKcZ3h6OHXSHzgYQtp1i5P6j40bIqr8nXTIlscy', 'user', NULL)
 ON DUPLICATE KEY UPDATE `id`=`id`;
 
 -- --------------------------------------------------------
@@ -79,12 +80,15 @@ INSERT INTO `items` (`id`, `user_id`, `type`, `title`, `category`, `description`
 (3, 1, 'found', 'Set of Car Keys with Honda Keychain', 'keys', 'Found black key fob with Honda logo and two silver keys attached to a red lanyard in parking sector B.', 'North Parking Garage Level 2', CURDATE() - INTERVAL 1 DAY, NULL, 'Security Front Desk', 'admin@findit.local', '+1 (555) 000-1111', 'active', MD5(RAND())),
 (4, 1, 'lost', 'Golden Retriever Puppy (Buddy)', 'pets', 'Buddy is 8 months old, wearing a blue collar with a bell. Last seen near Oakridge Park entrance. Very energetic and friendly.', 'Oakridge Neighborhood / Pine St', CURDATE() - INTERVAL 1 DAY, NULL, 'Elena Rostova', 'elena@example.com', '+1 (555) 012-7788', 'active', MD5(RAND())),
 (5, 1, 'found', 'Black Ray-Ban Aviator Sunglasses', 'clothing', 'Found in a protective hard case on table 4 at the main cafe. Gold frames with polarized dark lenses.', 'Main Street Coffee Bar', CURDATE() - INTERVAL 4 DAY, NULL, 'Cafe Manager', 'cafe@example.com', '+1 (555) 018-9900', 'active', MD5(RAND())),
-(6, 2, 'found', 'Calculus & Linear Algebra Textbook (9th Ed)', 'books', 'Hardcover university math textbook left on row 3 desk. Has yellow highlighter markings in Chapter 4.', 'Science Complex, Lecture Hall B', CURDATE() - INTERVAL 5 DAY, NULL, 'Department Helpdesk', 'helpdesk@example.com', '+1 (555) 011-3322', 'claimed', MD5(RAND()))
+(6, 2, 'found', 'Calculus & Linear Algebra Textbook (9th Ed)', 'books', 'Hardcover university math textbook left on row 3 desk. Has yellow highlighter markings in Chapter 4.', 'Science Complex, Lecture Hall B', CURDATE() - INTERVAL 5 DAY, NULL, 'Department Helpdesk', 'helpdesk@example.com', '+1 (555) 011-3322', 'claimed', MD5(RAND())),
+(7, 3, 'lost', 'SP Shine 125 keys', 'keys', 'A silver coloured key chain with 2 other keys', 'Parsking near CO', CURDATE() - INTERVAL 1 DAY, NULL, 'Apoorv Pandey', 'apoorvpandey678@gmail.com', '', 'active', MD5(RAND())),
+(8, NULL, 'found', 'Silver Stainless Steel Thermos', 'other', 'Left on table 4, insulated silver flask with mountain sticker.', 'Library Quiet Study Room 3', CURDATE() - INTERVAL 1 DAY, NULL, 'Campus Help Desk', 'helpdesk@example.com', '', 'active', MD5(RAND()))
 ON DUPLICATE KEY UPDATE `id`=`id`;
 
 -- --------------------------------------------------------
 -- Seed Sample Claim
 -- --------------------------------------------------------
 INSERT INTO `claims` (`id`, `item_id`, `claimant_id`, `claimant_name`, `claimant_email`, `claimant_phone`, `claim_message`, `status`) VALUES
-(1, 1, 1, 'Alex Morgan', 'alex.morgan@example.com', '+1 (555) 998-1122', 'I lost my blue iPhone 13 there! The lock screen wallpaper is a picture of a sunset in Maui, and the passcode starts with 49.', 'pending')
+(1, 1, 1, 'Alex Morgan', 'alex.morgan@example.com', '+1 (555) 998-1122', 'I lost my blue iPhone 13 there! The lock screen wallpaper is a picture of a sunset in Maui, and the passcode starts with 49.', 'pending'),
+(2, 8, NULL, 'Sarah Connor', 'sarah@example.com', '+1 555-4321', 'This is my thermos, it has a scratch on the bottom and a green REI sticker on the back.', 'pending')
 ON DUPLICATE KEY UPDATE `id`=`id`;

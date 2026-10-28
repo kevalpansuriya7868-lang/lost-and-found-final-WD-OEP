@@ -14,8 +14,8 @@ define('APP_NAME', 'FindIt Portal');
 define('APP_TAGLINE', 'Reconnecting people with their lost belongings');
 define('APP_URL', '');
 
-// Database Configuration (Default: SQLite for zero-configuration, MySQL optional)
-define('DB_DRIVER', 'sqlite');
+// Database Configuration (Converted to MySQL)
+define('DB_DRIVER', 'mysql');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'lost_and_found');
 define('DB_USER', 'root');
@@ -58,20 +58,146 @@ function getDbConnection() {
             initSqliteDatabase($pdo);
         } else {
             $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-            $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ]);
+            try {
+                $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                ]);
+            } catch (PDOException $ex) {
+                // If database does not exist yet, automatically create it
+                if ($ex->getCode() == 1049 || stripos($ex->getMessage(), 'Unknown database') !== false) {
+                    $serverDsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";charset=utf8mb4";
+                    $serverPdo = new PDO($serverDsn, DB_USER, DB_PASS, [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                    ]);
+                    $serverPdo->exec("CREATE DATABASE IF NOT EXISTS `" . DB_NAME . "` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+                    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                    ]);
+                } else {
+                    throw $ex;
+                }
+            }
+            initMysqlDatabase($pdo);
         }
     } catch (PDOException $e) {
         die("<div style='font-family:sans-serif;padding:24px;background:#fef2f2;border:1px solid #f87171;color:#991b1b;border-radius:10px;margin:30px auto;max-width:650px;box-shadow:0 4px 6px rgba(0,0,0,0.05);'>
             <h2 style='margin-top:0;'>Database Connection Failed</h2>
             <p><strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "</p>
-            <p>Please make sure SQLite or MySQL is properly configured.</p>
+            <p>Please make sure MySQL is running (e.g. via XAMPP, WAMP, or local MySQL service) and the credentials in <code>db.php</code> are correct.</p>
         </div>");
     }
 
     return $pdo;
+}
+
+function initMysqlDatabase($pdo) {
+    // 1. Create users table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS `users` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `name` VARCHAR(100) NOT NULL,
+            `email` VARCHAR(100) NOT NULL UNIQUE,
+            `password` VARCHAR(255) NOT NULL,
+            `role` VARCHAR(20) DEFAULT 'user',
+            `phone` VARCHAR(50) DEFAULT NULL,
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    ");
+
+    // 2. Create items table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS `items` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `user_id` INT DEFAULT NULL,
+            `type` VARCHAR(10) NOT NULL COMMENT 'lost or found',
+            `title` VARCHAR(255) NOT NULL,
+            `category` VARCHAR(50) NOT NULL,
+            `description` TEXT NOT NULL,
+            `location` VARCHAR(255) NOT NULL,
+            `item_date` DATE NOT NULL,
+            `image_path` VARCHAR(255) DEFAULT NULL,
+            `contact_name` VARCHAR(100) NOT NULL,
+            `contact_email` VARCHAR(100) NOT NULL,
+            `contact_phone` VARCHAR(50) DEFAULT NULL,
+            `status` VARCHAR(20) DEFAULT 'active' COMMENT 'active, claimed, returned',
+            `security_secret` VARCHAR(64) NOT NULL,
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            CONSTRAINT `fk_items_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    ");
+
+    // 3. Create claims table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS `claims` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `item_id` INT NOT NULL,
+            `claimant_id` INT DEFAULT NULL,
+            `claimant_name` VARCHAR(100) NOT NULL,
+            `claimant_email` VARCHAR(100) NOT NULL,
+            `claimant_phone` VARCHAR(50) DEFAULT NULL,
+            `claim_message` TEXT NOT NULL,
+            `status` VARCHAR(20) DEFAULT 'pending' COMMENT 'pending, approved, rejected',
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT `fk_claims_items` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
+            CONSTRAINT `fk_claims_users` FOREIGN KEY (`claimant_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    ");
+
+    // Seed or migrate default data if users table is empty
+    $userCount = $pdo->query("SELECT COUNT(*) FROM `users`")->fetchColumn();
+    if ($userCount == 0) {
+        if (file_exists(SQLITE_FILE)) {
+            migrateSqliteToMysql($pdo);
+        } else {
+            seedUsersAndData($pdo);
+        }
+    }
+}
+
+function migrateSqliteToMysql($mysqlPdo) {
+    if (!file_exists(SQLITE_FILE)) {
+        return;
+    }
+    try {
+        $sqlite = new PDO('sqlite:' . SQLITE_FILE);
+        $sqlite->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $mysqlPdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
+
+        // Sync users
+        $users = $sqlite->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($users)) {
+            $stmt = $mysqlPdo->prepare("REPLACE INTO users (id, name, email, password, role, phone, created_at) VALUES (:id, :name, :email, :password, :role, :phone, :created_at)");
+            foreach ($users as $u) {
+                $stmt->execute($u);
+            }
+        }
+
+        // Sync items
+        $items = $sqlite->query("SELECT * FROM items")->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($items)) {
+            $stmt = $mysqlPdo->prepare("REPLACE INTO items (id, user_id, type, title, category, description, location, item_date, image_path, contact_name, contact_email, contact_phone, status, security_secret, created_at, updated_at) VALUES (:id, :user_id, :type, :title, :category, :description, :location, :item_date, :image_path, :contact_name, :contact_email, :contact_phone, :status, :security_secret, :created_at, :updated_at)");
+            foreach ($items as $i) {
+                $stmt->execute($i);
+            }
+        }
+
+        // Sync claims
+        $claims = $sqlite->query("SELECT * FROM claims")->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($claims)) {
+            $stmt = $mysqlPdo->prepare("REPLACE INTO claims (id, item_id, claimant_id, claimant_name, claimant_email, claimant_phone, claim_message, status, created_at) VALUES (:id, :item_id, :claimant_id, :claimant_name, :claimant_email, :claimant_phone, :claim_message, :status, :created_at)");
+            foreach ($claims as $c) {
+                $stmt->execute($c);
+            }
+        }
+
+        $mysqlPdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+    } catch (Exception $e) {
+        // Fallback silently if SQLite migration is not needed
+    }
 }
 
 function initSqliteDatabase($pdo) {

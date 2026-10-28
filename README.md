@@ -72,7 +72,7 @@ Then navigate to:
 http://localhost:8000
 ```
 
-> **Database Note:** Uses **SQLite** (`lost_and_found.db`) out-of-the-box with zero setup required. You can also switch to MySQL in `db.php` if desired.
+> **Database Note:** Configured with **MySQL** (`lost_and_found` database on localhost:3306) via PHP PDO in `db.php` and `database.sql`.
 
 ---
 
