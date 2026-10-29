@@ -15,12 +15,12 @@ define('APP_TAGLINE', 'Reconnecting people with their lost belongings');
 define('APP_URL', '');
 
 // Database Configuration (Converted to MySQL)
-define('DB_DRIVER', 'mysql');
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'lost_and_found');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_PORT', 3306);
+define('DB_DRIVER', getenv('DB_DRIVER') ?: 'mysql');
+define('DB_HOST', getenv('MYSQLHOST') ?: getenv('MYSQL_HOST') ?: 'localhost');
+define('DB_NAME', getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: 'lost_and_found');
+define('DB_USER', getenv('MYSQLUSER') ?: getenv('MYSQL_USER') ?: 'root');
+define('DB_PASS', getenv('MYSQLPASSWORD') ?: getenv('MYSQL_PASSWORD') ?: '');
+define('DB_PORT', getenv('MYSQLPORT') ?: getenv('MYSQL_PORT') ?: 3306);
 define('SQLITE_FILE', __DIR__ . '/lost_and_found.db');
 
 // Upload directory & file upload limits
