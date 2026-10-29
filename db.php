@@ -15,11 +15,27 @@ define('APP_TAGLINE', 'Reconnecting people with their lost belongings');
 define('APP_URL', '');
 
 // Database Configuration (Converted to MySQL)
-define('DB_HOST', getenv('MYSQLHOST') ?: 'localhost');
-define('DB_NAME', getenv('MYSQLDATABASE') ?: 'lost_and_found');
-define('DB_USER', getenv('MYSQLUSER') ?: 'root');
-define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
-define('DB_PORT', getenv('MYSQLPORT') ?: 3306);
+$mysqlUrl = getenv('MYSQL_URL') ?: getenv('DATABASE_URL');
+$defaultHost = 'localhost';
+$defaultPort = 3306;
+$defaultUser = 'root';
+$defaultPass = '';
+$defaultDb   = 'lost_and_found';
+
+if ($mysqlUrl && ($urlParts = parse_url($mysqlUrl))) {
+    if (isset($urlParts['host'])) $defaultHost = $urlParts['host'];
+    if (isset($urlParts['port'])) $defaultPort = $urlParts['port'];
+    if (isset($urlParts['user'])) $defaultUser = $urlParts['user'];
+    if (isset($urlParts['pass'])) $defaultPass = $urlParts['pass'];
+    if (isset($urlParts['path'])) $defaultDb   = ltrim($urlParts['path'], '/');
+}
+
+define('DB_DRIVER', getenv('DB_DRIVER') ?: 'mysql');
+define('DB_HOST', getenv('MYSQLHOST') ?: getenv('MYSQL_HOST') ?: $defaultHost);
+define('DB_NAME', getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: $defaultDb);
+define('DB_USER', getenv('MYSQLUSER') ?: getenv('MYSQL_USER') ?: $defaultUser);
+define('DB_PASS', getenv('MYSQLPASSWORD') ?: getenv('MYSQL_PASSWORD') ?: $defaultPass);
+define('DB_PORT', getenv('MYSQLPORT') ?: getenv('MYSQL_PORT') ?: $defaultPort);
 define('SQLITE_FILE', __DIR__ . '/lost_and_found.db');
 
 // Upload directory & file upload limits
@@ -49,7 +65,7 @@ function getDbConnection() {
     }
 
     try {
-        if (DB_DRIVER === 'sqlite') {
+        if (defined('DB_DRIVER') && DB_DRIVER === 'sqlite') {
             $pdo = new PDO('sqlite:' . SQLITE_FILE);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
