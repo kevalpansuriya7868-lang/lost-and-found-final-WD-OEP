@@ -655,34 +655,81 @@ function handle_image_upload($file_input_name) {
     $file = $_FILES[$file_input_name];
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
-        return ['success' => false, 'error' => 'File upload error code: ' . $file['error']];
+        $uploadErrors = [
+            UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize limit in php.ini.',
+            UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE limit in the form.',
+            UPLOAD_ERR_PARTIAL    => 'The file was only partially uploaded. Please try again.',
+            UPLOAD_ERR_NO_FILE    => 'No file was uploaded.',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder on server.',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk. Check disk permissions.',
+            UPLOAD_ERR_EXTENSION  => 'A server extension blocked the file upload.'
+        ];
+        $msg = $uploadErrors[$file['error']] ?? ('File upload failed with error code: ' . $file['error']);
+        return ['success' => false, 'error' => $msg];
     }
 
     if ($file['size'] > MAX_FILE_SIZE) {
-        return ['success' => false, 'error' => 'File size exceeds maximum limit of 5MB.'];
+        return ['success' => false, 'error' => 'File size exceeds maximum allowed limit of 5MB.'];
     }
 
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($ext, ALLOWED_EXTENSIONS)) {
-        return ['success' => false, 'error' => 'Invalid file format. Allowed: ' . implode(', ', ALLOWED_EXTENSIONS)];
+        return ['success' => false, 'error' => 'Invalid file extension (.' . htmlspecialchars($ext) . '). Allowed: ' . implode(', ', ALLOWED_EXTENSIONS)];
     }
 
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mime = finfo_file($finfo, $file['tmp_name']);
-    finfo_close($finfo);
-
-    $allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!in_array($mime, $allowedMimes)) {
-        return ['success' => false, 'error' => 'Invalid image content type.'];
+    // Multi-layer MIME inspection with safe fallbacks
+    $mime = '';
+    if (function_exists('finfo_open')) {
+        $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo) {
+            $mime = @finfo_file($finfo, $file['tmp_name']);
+            @finfo_close($finfo);
+        }
     }
+    if (empty($mime) && function_exists('mime_content_type')) {
+        $mime = @mime_content_type($file['tmp_name']);
+    }
+    if (empty($mime) && function_exists('getimagesize')) {
+        $imgInfo = @getimagesize($file['tmp_name']);
+        if ($imgInfo && isset($imgInfo['mime'])) {
+            $mime = $imgInfo['mime'];
+        }
+    }
+    if (empty($mime)) {
+        $mime = $file['type'] ?? '';
+    }
+
+    $allowedMimes = [
+        'image/jpeg', 'image/jpg', 'image/pjpeg',
+        'image/png', 'image/x-png',
+        'image/webp',
+        'image/gif'
+    ];
+    if (!empty($mime) && !in_array(strtolower($mime), $allowedMimes)) {
+        return ['success' => false, 'error' => 'Invalid image content type (' . htmlspecialchars($mime) . '). Only standard images are permitted.'];
+    }
+
+    // Ensure upload destination folder exists
+    if (!is_dir(UPLOAD_DIR)) {
+        @mkdir(UPLOAD_DIR, 0777, true);
+    }
+    @chmod(UPLOAD_DIR, 0777);
 
     $uniqueName = 'item_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
     $targetPath = UPLOAD_DIR . $uniqueName;
 
-    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return ['success' => false, 'error' => 'Failed to save uploaded image to destination directory.'];
+    $saved = false;
+    if (is_uploaded_file($file['tmp_name'])) {
+        $saved = @move_uploaded_file($file['tmp_name'], $targetPath);
+    } else {
+        $saved = @copy($file['tmp_name'], $targetPath);
     }
 
+    if (!$saved) {
+        return ['success' => false, 'error' => 'Failed to save uploaded image. Please ensure the server upload directory is writable.'];
+    }
+
+    @chmod($targetPath, 0666);
     return ['success' => true, 'filename' => $uniqueName];
 }
 

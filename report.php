@@ -251,7 +251,7 @@ render_header($pageTitle);
                 <label class="form-label">Report Category Type <span class="required">*</span></label>
                 <div class="radio-card-group">
                     <label class="radio-card" style="border-color: <?= ($type === 'lost') ? 'var(--lost-color)' : 'var(--border-color)' ?>;">
-                        <input type="radio" name="type" value="lost" <?= ($type === 'lost') ? 'checked' : '' ?> onchange="this.form.submit()">
+                        <input type="radio" name="type" value="lost" <?= ($type === 'lost') ? 'checked' : '' ?>>
                         <div class="radio-card-content">
                             <span class="radio-card-title" style="color: var(--lost-color); display: flex; align-items: center; gap: 0.4rem;"><span class="badge-dot badge-dot-lost"></span> I Lost Something</span>
                             <span class="radio-card-desc">Post details of an item you misplaced to help finders identify it.</span>
@@ -259,7 +259,7 @@ render_header($pageTitle);
                     </label>
 
                     <label class="radio-card" style="border-color: <?= ($type === 'found') ? 'var(--found-color)' : 'var(--border-color)' ?>;">
-                        <input type="radio" name="type" value="found" <?= ($type === 'found') ? 'checked' : '' ?> onchange="this.form.submit()">
+                        <input type="radio" name="type" value="found" <?= ($type === 'found') ? 'checked' : '' ?>>
                         <div class="radio-card-content">
                             <span class="radio-card-title" style="color: var(--found-color); display: flex; align-items: center; gap: 0.4rem;"><span class="badge-dot badge-dot-found"></span> I Found Something</span>
                             <span class="radio-card-desc">Help return discovered belongings safely to the rightful owner.</span>
@@ -352,12 +352,23 @@ render_header($pageTitle);
 
                     <div class="file-drop-area" id="dropArea">
                         <span class="drop-icon" style="color: var(--primary); display: flex; justify-content: center;"><?= get_svg_icon('camera', 'svg-icon', 36) ?></span>
-                        <span class="drop-text">Click to choose image or drag &amp; drop file here</span>
-                        <span class="drop-hint">Supported formats: JPG, PNG, WEBP, GIF (Up to 5MB)</span>
+                        <span class="drop-text" id="dropText">Click to choose image or drag &amp; drop file here</span>
+                        <span class="drop-hint" id="dropHint">Supported formats: JPG, PNG, WEBP, GIF (Up to 5MB)</span>
                         <input type="file" id="item_image" name="item_image" accept="image/jpeg,image/png,image/webp,image/gif" class="file-input">
                     </div>
+
+                    <!-- Client-side Live Thumbnail Preview Container -->
+                    <div class="image-preview-container" id="imagePreviewContainer" style="display: none; margin-top: 1rem; padding: 0.85rem; background: var(--bg-elevated); border: 1px solid var(--border-color); border-radius: var(--radius-md); max-width: 320px;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">Selected Photo Preview</span>
+                        <img id="imagePreview" src="" alt="Selected image preview" style="width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: block;">
+                        <div id="imagePreviewDetails" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; word-break: break-all;"></div>
+                        <button type="button" class="btn btn-secondary btn-sm" id="removeImageBtn" style="margin-top: 0.65rem; display: inline-flex; align-items: center; gap: 0.35rem; width: 100%; justify-content: center;">
+                            <?= get_svg_icon('trash', 'svg-icon', 14) ?> Remove Photo
+                        </button>
+                    </div>
+
                     <?php if (isset($errors['item_image'])): ?>
-                        <span class="field-error"><?= htmlspecialchars($errors['item_image']) ?></span>
+                        <span class="field-error" style="display: block; margin-top: 0.5rem;"><?= htmlspecialchars($errors['item_image']) ?></span>
                     <?php endif; ?>
                 </div>
             </div>

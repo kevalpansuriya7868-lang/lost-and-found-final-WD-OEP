@@ -167,42 +167,93 @@ function initImageUploadPreview() {
     const previewImg = document.getElementById('imagePreview');
     const removeBtn = document.getElementById('removeImageBtn');
 
-    if (!fileInput || !previewContainer || !previewImg) return;
+    const dropArea = document.getElementById('dropArea');
+    const dropText = document.getElementById('dropText');
+    const details = document.getElementById('imagePreviewDetails');
+    if (!fileInput) return;
 
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files && fileInput.files[0]) {
-            const file = fileInput.files[0];
+    function handleFile(file) {
+        if (!file) return;
 
-            // Validate format and size first
-            if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) {
-                alert('Please select an image file (JPG, PNG, WEBP, GIF).');
-                fileInput.value = '';
-                previewContainer.style.display = 'none';
-                return;
-            }
+        const validExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
+        const isValidType = file.type ? ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) : validExtensions.includes(ext);
 
-            if (file.size > 5 * 1024 * 1024) {
-                alert('Image file is too large. Max allowed size is 5MB.');
-                fileInput.value = '';
-                previewContainer.style.display = 'none';
-                return;
-            }
+        if (!isValidType && !validExtensions.includes(ext)) {
+            alert('Please select an image file (JPG, PNG, WEBP, GIF).');
+            fileInput.value = '';
+            if (previewContainer) previewContainer.style.display = 'none';
+            if (dropText) dropText.textContent = 'Click to choose image or drag & drop file here';
+            return;
+        }
 
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Image file is too large. Max allowed size is 5MB.');
+            fileInput.value = '';
+            if (previewContainer) previewContainer.style.display = 'none';
+            if (dropText) dropText.textContent = 'Click to choose image or drag & drop file here';
+            return;
+        }
+
+        if (previewContainer && previewImg) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 previewImg.src = e.target.result;
                 previewContainer.style.display = 'block';
+                if (details) {
+                    details.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                }
             };
             reader.readAsDataURL(file);
         }
+
+        if (dropText) {
+            dropText.textContent = 'Selected: ' + file.name;
+        }
+    }
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files && fileInput.files[0]) {
+            handleFile(fileInput.files[0]);
+        }
     });
+
+    if (dropArea) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropArea.classList.add('drag-over');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropArea.classList.remove('drag-over');
+            }, false);
+        });
+
+        dropArea.addEventListener('drop', function (e) {
+            const dt = e.dataTransfer;
+            if (dt && dt.files && dt.files.length) {
+                fileInput.files = dt.files;
+                handleFile(dt.files[0]);
+            }
+        }, false);
+    }
 
     if (removeBtn) {
         removeBtn.addEventListener('click', function (e) {
             e.preventDefault();
             fileInput.value = '';
-            previewImg.src = '';
-            previewContainer.style.display = 'none';
+            if (previewImg) previewImg.src = '';
+            if (previewContainer) previewContainer.style.display = 'none';
+            if (details) details.textContent = '';
+            if (dropText) {
+                dropText.textContent = 'Click to choose image or drag & drop file here';
+            }
         });
     }
 }
