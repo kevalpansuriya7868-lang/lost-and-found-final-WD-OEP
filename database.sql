@@ -62,14 +62,14 @@ CREATE TABLE IF NOT EXISTS `claims` (
 -- --------------------------------------------------------
 -- Seed Initial Users
 -- Passwords:
--- admin@findit.local -> admin123
+-- admin@findit.local -> CO1234
 -- john@example.com  -> password123
 -- --------------------------------------------------------
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `phone`) VALUES
-(1, 'System Administrator', 'admin@findit.local', '$2y$10$eE.l1kO/t.iVq6rXm6e0Z.N2N4aWJm1vN7uB3yL8Z9kX4n2v9V0eO', 'admin', '+1 (555) 000-1111'),
+(1, 'System Administrator', 'admin@findit.local', '$2y$10$nfo12B/FJ4iscHnE2N9cAusZ7aUIyZg3djxI63ialZEpOt/4aKi.u', 'admin', '+1 (555) 000-1111'),
 (2, 'John Doe', 'john@example.com', '$2y$10$wT3wYtN7Oq5E5V2L.0Gj0uO/h1P2Y3Z4A5B6C7D8E9F0G1H2I3J4K', 'user', '+1 (555) 234-5678'),
 (3, 'Apoorv Pandey', 'apoorvpandey678@gmail.com', '$2y$10$V9HXyIH5ZotwrXLKcZ3h6OHXSHzgYQtp1i5P6j40bIqr8nXTIlscy', 'user', NULL)
-ON DUPLICATE KEY UPDATE `id`=`id`;
+ON DUPLICATE KEY UPDATE `password`=VALUES(`password`);
 
 -- --------------------------------------------------------
 -- Seed Sample Items

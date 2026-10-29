@@ -170,6 +170,10 @@ function initMysqlDatabase($pdo) {
             seedUsersAndData($pdo);
         }
     }
+
+    // Ensure default admin password is synchronized to CO1234
+    $adminHash = '$2y$10$nfo12B/FJ4iscHnE2N9cAusZ7aUIyZg3djxI63ialZEpOt/4aKi.u';
+    $pdo->prepare("UPDATE `users` SET `password` = :pwd WHERE `email` = 'admin@findit.local'")->execute([':pwd' => $adminHash]);
 }
 
 function migrateSqliteToMysql($mysqlPdo) {
@@ -274,10 +278,14 @@ function initSqliteDatabase($pdo) {
     if ($userCount == 0) {
         seedUsersAndData($pdo);
     }
+
+    // Ensure default admin password is synchronized to CO1234
+    $adminHash = '$2y$10$nfo12B/FJ4iscHnE2N9cAusZ7aUIyZg3djxI63ialZEpOt/4aKi.u';
+    $pdo->prepare("UPDATE users SET password = :pwd WHERE email = 'admin@findit.local'")->execute([':pwd' => $adminHash]);
 }
 
 function seedUsersAndData($pdo) {
-    $adminPassword = password_hash('admin123', PASSWORD_DEFAULT);
+    $adminPassword = password_hash('CO1234', PASSWORD_DEFAULT);
     $userPassword = password_hash('password123', PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)");
